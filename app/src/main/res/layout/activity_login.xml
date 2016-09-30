@@ -8,23 +8,14 @@
     android:gravity="center_horizontal"
     android:orientation="vertical"
     android:padding="40dp"
-    android:weightSum="1">
-
-    <ImageView
-        android:layout_width="388dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/crest"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_gravity="center_horizontal"
-        android:layout_weight="0.43"
-        android:layout_marginTop="30dp" />
+    android:weightSum="1"
+    android:baselineAligned="false">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="100dp"
         android:gravity="center_vertical"
         android:orientation="vertical"
         android:focusableInTouchMode="false"
@@ -115,6 +106,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
+        android:layout_marginBottom="100dp"
         android:gravity="right">
 
         <TextView
@@ -147,6 +139,21 @@
             android:clickable="true"
             android:textSize="14sp" />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/register"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/transparent_button_selector"
+        android:paddingBottom="12dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="12dp"
+        android:text="Need an account? Register here."
+        android:textColor="@android:color/white"
+        android:textColorHighlight="@android:color/transparent"
+        android:clickable="true"
+        android:textSize="14sp" />
 
 
 </LinearLayout>

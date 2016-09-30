@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="de.andreasschrade.androidtemplate">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
+
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -16,30 +23,38 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyD7oezpWuqCUaV-ZxMOLLmBzh21wjjBKN0" />
 
-        <activity android:name=".ui.quote.ListActivity">
+        <activity android:name=".activities.peripheral.BidActivity"></activity>
+        <activity
+            android:name=".activities.peripheral.ProfileActivity"
+            android:label=""
+            android:parentActivityName=".activities.peripheral.BidActivity" />
+        <activity
+            android:name=".activities.peripheral.HomeActivity"
+            android:label=""
+            android:parentActivityName=".activities.peripheral.BidActivity">
+
+
 
         </activity>
         <activity
-            android:name=".ui.quote.ArticleDetailActivity"
-            android:label=""
-            android:parentActivityName=".ui.quote.ListActivity" />
-        <activity
-            android:name=".ui.ViewSamplesActivity"
-            android:label=""
-            android:parentActivityName=".ui.quote.ListActivity" />
-        <activity
-            android:name=".ui.SettingsActivity"
+            android:name=".activities.core.SettingsActivity"
             android:label="Settings"
-            android:parentActivityName=".ui.quote.ListActivity" />
+            android:parentActivityName=".activities.peripheral.BidActivity" />
+        <activity android:name=".activities.core.LoginActivity">
 
-        <activity android:name=".ui.quote.LoginActivity">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+
+
         </activity>
+        <activity android:name=".activities.core.RegisterActivity"></activity>
+        <activity android:name="com.soundcloud.android.crop.CropImageActivity" />
     </application>
 
 </manifest>

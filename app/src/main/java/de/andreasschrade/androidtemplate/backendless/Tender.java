@@ -5,13 +5,24 @@ package de.andreasschrade.androidtemplate.backendless;
  */
 public class Tender {
 
-    private String time;
+    private String type;
     private double latitude;
     private double longitude;
     private String ownerId;
+    private String objectId;
 
     public Tender()
     {
+    }
+
+    public String getObjectId()
+    {
+        return objectId;
+    }
+
+    public void setObjectId( String objectId )
+    {
+        this.objectId = objectId;
     }
 
     public String getOwnerId()
@@ -44,13 +55,13 @@ public class Tender {
         this.longitude = longitude;
     }
 
-    public String getTime()
+    public String getType()
     {
-        return time;
+        return type;
     }
 
-    public void setTime( String time )
+    public void setType( String type )
     {
-        this.time = time;
+        this.type = type;
     }
 }

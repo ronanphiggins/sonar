@@ -17,7 +17,7 @@ Support Design Library Views          |  Preferences
 
 ## What is this?
 
-This is a State of the Art Android Material Design template. You can use this project as a template for upcoming App projects. Just clone the project, change package name and make all necessary customisations. 
+This is a State of the Art Android Material Design template. You can use this project as a template for upcoming App projects. Just clone the project, change package title and make all necessary customisations.
 
 
 ## Dependencies
@@ -67,14 +67,14 @@ You can easily change the colors of your app. You only have to set the color val
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="theme_primary_accent">#8BC34A</color>
-    <color name="theme_primary_dark">#1976D2</color>
-    <color name="theme_primary_light">#2196F3</color>
-    <color name="theme_window_background">#FFF5F5F5</color>
-    <color name="theme_divider">#B6B6B6</color>
+    <color title="theme_primary_accent">#8BC34A</color>
+    <color title="theme_primary_dark">#1976D2</color>
+    <color title="theme_primary_light">#2196F3</color>
+    <color title="theme_window_background">#FFF5F5F5</color>
+    <color title="theme_divider">#B6B6B6</color>
 
-    <color name="primary_text">#212121</color>
-    <color name="secondary_text">#727272</color>
+    <color title="primary_text">#212121</color>
+    <color title="secondary_text">#727272</color>
 </resources>
 ```
 
@@ -145,7 +145,7 @@ For example, the following snippet (ArticleDetailFragment.java) binds automatica
 ```
 
 ## About
-My name is <a href="http://www.andreas-schrade.de">Andreas Schrade</a> and I am a freelance software developer with an interest in Android and Java backend development.
+My title is <a href="http://www.andreas-schrade.de">Andreas Schrade</a> and I am a freelance software developer with an interest in Android and Java backend development.
 
 
 

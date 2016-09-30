@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--<item name="include_list_view" type="layout">@layout/include_list_view_twopane</item>-->
+    <!--<item name="include_bid" type="layout">@layout/include_bid_twopane</item>-->
 </resources>
