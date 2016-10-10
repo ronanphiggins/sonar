@@ -23,6 +23,7 @@ import com.backendless.Backendless;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
 import com.backendless.files.BackendlessFile;
+import com.backendless.persistence.local.UserIdStorageFactory;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.soundcloud.android.crop.Crop;
@@ -218,7 +219,7 @@ public class SettingsActivity extends BaseActivity {
                 final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
                 Log.i("info", "image select success");
 
-                String currentId = Backendless.UserService.CurrentUser().getObjectId();
+                String currentId = UserIdStorageFactory.instance().getStorage().get();
                 String[] parts = currentId.split("-");
                 final String part = parts[4];
                 String imageLoad = part + ".png";

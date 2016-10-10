@@ -3,7 +3,6 @@ package de.andreasschrade.androidtemplate.activities.peripheral;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,10 +16,10 @@ import com.bumptech.glide.Glide;
 
 import butterknife.Bind;
 import de.andreasschrade.androidtemplate.R;
-import de.andreasschrade.androidtemplate.wrapper.DummyContent;
+import de.andreasschrade.androidtemplate.utilities.Wrapper;
+import de.andreasschrade.androidtemplate.wrapper.BidderContent;
 import de.andreasschrade.androidtemplate.activities.base.BaseActivity;
 import de.andreasschrade.androidtemplate.activities.base.BaseFragment;
-import de.andreasschrade.androidtemplate.utilities.Wrapper;
 
 /**
  * Shows the quote detail page.
@@ -37,7 +36,7 @@ public class ProfileDetailFragment extends BaseFragment {
     /**
      * The dummy content of this fragment.
      */
-    private DummyContent.DummyItem dummyItem;
+    private BidderContent.BidderItem bidderItem;
 
     @Bind(R.id.quote)
     TextView quote;
@@ -57,7 +56,7 @@ public class ProfileDetailFragment extends BaseFragment {
 
         if (getArguments().containsKey(ARG_ITEM_ID)) {
             // load dummy item by using the passed item ID.
-            dummyItem = DummyContent.ITEM_MAP.get(getArguments().getString(ARG_ITEM_ID));
+            bidderItem = BidderContent.ITEM_MAP.get(getArguments().getString(ARG_ITEM_ID));
         }
 
         setHasOptionsMenu(true);
@@ -72,11 +71,11 @@ public class ProfileDetailFragment extends BaseFragment {
             ((BaseActivity) getActivity()).setToolbar((Toolbar) rootView.findViewById(R.id.toolbar));
         }
 
-        if (dummyItem != null) {
+        if (bidderItem != null) {
             loadBackdrop();
-            collapsingToolbar.setTitle(dummyItem.title);
-            author.setText(dummyItem.author);
-            quote.setText(dummyItem.content);
+            collapsingToolbar.setTitle(bidderItem.name);
+            author.setText(bidderItem.offer);
+            quote.setText(bidderItem.bio);
         }
 
 
@@ -86,12 +85,11 @@ public class ProfileDetailFragment extends BaseFragment {
 
     private void loadBackdrop() {
 
-        /*Log.i("info", Wrapper.markerId);
 
-        String url = "https://api.backendless.com/A0819152-C875-C222-FF18-0516AB9ACC00/v1/files/media/" + Wrapper.markerId + ".jpg";
-        Glide.with(this).load(url).centerCrop().into(backdropImg);*/
+        String url = "https://api.backendless.com/A0819152-C875-C222-FF18-0516AB9ACC00/v1/files/media/" + bidderItem.photoId + ".png";
+        Glide.with(this).load(url).centerCrop().into(backdropImg);
 
-        Glide.with(this).load(dummyItem.photoId).centerCrop().into(backdropImg);
+        //Glide.with(this).load(bidderItem.photoId).centerCrop().into(backdropImg);
     }
 
     @Override

@@ -31,6 +31,7 @@ import com.backendless.Backendless;
 import com.backendless.BackendlessCollection;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
+import com.backendless.persistence.local.UserIdStorageFactory;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.google.android.gms.common.ConnectionResult;
@@ -39,6 +40,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.*;
 import com.google.android.gms.maps.model.*;
 
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -57,6 +59,7 @@ import butterknife.OnClick;
 import de.andreasschrade.androidtemplate.R;
 import de.andreasschrade.androidtemplate.activities.core.LoginActivity;
 import de.andreasschrade.androidtemplate.activities.core.SettingsActivity;
+import de.andreasschrade.androidtemplate.backendless.Bid;
 import de.andreasschrade.androidtemplate.backendless.Tender;
 import de.andreasschrade.androidtemplate.activities.base.BaseActivity;
 import de.andreasschrade.androidtemplate.utilities.CustomDialogClass;
@@ -84,6 +87,7 @@ public class HomeActivity extends BaseActivity implements OnMapReadyCallback,Goo
 
     String dateObjectId;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -109,10 +113,12 @@ public class HomeActivity extends BaseActivity implements OnMapReadyCallback,Goo
                     final Tender tender = iterator.next();
 
                     final String ownerId = tender.getOwnerId();
+                    final String tenderId = tender.getObjectId();
                     final Double tenderLat = tender.getLatitude();
                     final Double tenderLong = tender.getLongitude();
 
-                    if (ownerId.equalsIgnoreCase(Backendless.UserService.CurrentUser().getObjectId())) {
+
+                    if (ownerId.equalsIgnoreCase(UserIdStorageFactory.instance().getStorage().get())) {
 
                         Log.i("info", "hasTender");
 
@@ -121,6 +127,8 @@ public class HomeActivity extends BaseActivity implements OnMapReadyCallback,Goo
                         dateObjectId = tender.getObjectId();
 
                         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+
+                        Wrapper.tenderId = tenderId;
 
                         fab.hide();
 
@@ -164,7 +172,7 @@ public class HomeActivity extends BaseActivity implements OnMapReadyCallback,Goo
                                 Bitmap newBitmap = bitmapUtil.getCircularBitmap(theBitmap);
                                 int theColor = Color.parseColor("#C63D0F");
                                 Bitmap newnewBitmap = bitmapUtil.addBorderToCircularBitmap(newBitmap, 15, theColor);
-                                mMap.addMarker(new MarkerOptions().position(userPosition).icon(BitmapDescriptorFactory.fromBitmap(newnewBitmap)).snippet(ownerId));
+                                mMap.addMarker(new MarkerOptions().position(userPosition).title(tenderId).icon(BitmapDescriptorFactory.fromBitmap(newnewBitmap)).snippet(ownerId));
 
                             }
 
@@ -193,8 +201,14 @@ public class HomeActivity extends BaseActivity implements OnMapReadyCallback,Goo
         if (hasTender != true) {
 
 
+
+
             final Dialog dialog = new Dialog(this);
             dialog.setContentView(R.layout.custom_dialog);
+
+            WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
+            lp.dimAmount=0.9f; // Dim level. 0.0 - no dim, 1.0 - completely opaque
+            dialog.getWindow().setAttributes(lp);
 
 
 
@@ -285,7 +299,11 @@ public class HomeActivity extends BaseActivity implements OnMapReadyCallback,Goo
                 }
             });
 
+
+
             dialog.show();
+
+
 
 
 
@@ -381,6 +399,8 @@ public class HomeActivity extends BaseActivity implements OnMapReadyCallback,Goo
 
         mMap.setOnMarkerClickListener(this);
 
+        //var mc = new MarkerClusterer(map);
+
     }
 
 
@@ -398,7 +418,7 @@ public class HomeActivity extends BaseActivity implements OnMapReadyCallback,Goo
 
         //String part = StringUtil.splitString(Backendless.UserService.CurrentUser().getObjectId());
 
-        if (marker.getSnippet().equalsIgnoreCase(Backendless.UserService.CurrentUser().getObjectId())) {
+        if (marker.getSnippet().equalsIgnoreCase(UserIdStorageFactory.instance().getStorage().get())) {
 
             Log.i("info", "current user clicked");
 
@@ -440,6 +460,52 @@ public class HomeActivity extends BaseActivity implements OnMapReadyCallback,Goo
             dialog.show();
 
 
+
+        } else {
+
+
+            final Dialog dialog = new Dialog(this);
+            dialog.setContentView(R.layout.custom_dialog_bid);
+
+            TextView dialogButton = (TextView) dialog.findViewById(R.id.textViewbid);
+            dialogButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    Log.i("info", marker.getTitle());
+
+                    Bid bid = new Bid();
+                    bid.setPickupline("Brunch?");
+                    bid.setTender(marker.getTitle());
+
+
+                    Backendless.Persistence.of(Bid.class).save(bid, new AsyncCallback<Bid>() {
+                        @Override
+                        public void handleResponse(Bid bid) {
+
+
+                            Log.i("info", "success post");
+
+                            dialog.dismiss();
+
+
+                        }
+
+                        @Override
+                        public void handleFault(BackendlessFault backendlessFault) {
+
+                            Log.i("info", "failed post" + backendlessFault);
+
+                            dialog.dismiss();
+                        }
+                    });
+
+
+
+                }
+            });
+
+            dialog.show();
 
         }
 
@@ -502,9 +568,10 @@ public class HomeActivity extends BaseActivity implements OnMapReadyCallback,Goo
                 Log.i("info", "success post");
 
 
-                String currentId = Backendless.UserService.CurrentUser().getObjectId();
+                String currentId = UserIdStorageFactory.instance().getStorage().get();
                 String[] parts = currentId.split("-");
                 final String part = parts[4];
+                final String tenderId = tender.getObjectId();
 
                 new AsyncTask<Void, Void, Void>() {
                     @Override
@@ -539,9 +606,11 @@ public class HomeActivity extends BaseActivity implements OnMapReadyCallback,Goo
                             Bitmap newBitmap = bitmapUtil.getCircularBitmap(theBitmap);
                             int theColor = Color.parseColor("#C63D0F");
                             Bitmap newnewBitmap = bitmapUtil.addBorderToCircularBitmap(newBitmap, 15, theColor);
-                            mMap.addMarker(new MarkerOptions().position(userPosition).icon(BitmapDescriptorFactory.fromBitmap(newnewBitmap)).snippet(Backendless.UserService.CurrentUser().getObjectId()));
+                            mMap.addMarker(new MarkerOptions().position(userPosition).icon(BitmapDescriptorFactory.fromBitmap(newnewBitmap)).title(tenderId).snippet(UserIdStorageFactory.instance().getStorage().get()));
 
                             dateObjectId = tender.getObjectId();
+
+                            Wrapper.tenderId = tenderId;
 
                             FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 

@@ -2,16 +2,17 @@ package de.andreasschrade.androidtemplate.activities.peripheral;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.ListView;
 
-import com.backendless.Backendless;
-
 import de.andreasschrade.androidtemplate.R;
-import de.andreasschrade.androidtemplate.wrapper.DummyContent;
+import de.andreasschrade.androidtemplate.wrapper.BidderContent;
 import de.andreasschrade.androidtemplate.activities.base.BaseActivity;
 import de.andreasschrade.androidtemplate.utilities.LogUtil;
 
@@ -46,6 +47,23 @@ public class BidActivity extends BaseActivity implements BidListFragment.Callbac
         }
 
 
+        FloatingActionButton mFloatingActionButton   = (FloatingActionButton)findViewById(R.id.fab8);
+
+        mFloatingActionButton.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    Log.i("info", "clicked!!!!");
+
+                    return true;
+                }
+                return true; // consume the event
+            }
+        });
+
+
+
+
         //Glide.with(this).load("https://api.backendless.com/A0819152-C875-C222-FF18-0516AB9ACC00/v1/files/media/ECC5B9F0.jpg").into(img);
     }
 
@@ -75,7 +93,7 @@ public class BidActivity extends BaseActivity implements BidListFragment.Callbac
     }
 
     private void setupDetailFragment() {
-        ProfileDetailFragment fragment =  ProfileDetailFragment.newInstance(DummyContent.ITEMS.get(0).id);
+        ProfileDetailFragment fragment =  ProfileDetailFragment.newInstance(BidderContent.ITEMS.get(0).id);
         getFragmentManager().beginTransaction().replace(R.id.article_detail_container, fragment).commit();
     }
 

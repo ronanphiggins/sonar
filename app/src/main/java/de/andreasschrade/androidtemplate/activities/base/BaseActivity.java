@@ -21,14 +21,27 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.backendless.Backendless;
+import com.backendless.BackendlessCollection;
+import com.backendless.BackendlessUser;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
+import com.backendless.persistence.BackendlessDataQuery;
+import com.backendless.persistence.QueryOptions;
+import com.backendless.persistence.local.UserIdStorageFactory;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.joda.time.LocalDate;
+import org.joda.time.Years;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
 import de.andreasschrade.androidtemplate.R;
@@ -36,11 +49,14 @@ import de.andreasschrade.androidtemplate.activities.core.SettingsActivity;
 import de.andreasschrade.androidtemplate.activities.peripheral.HomeActivity;
 import de.andreasschrade.androidtemplate.activities.peripheral.BidActivity;
 import de.andreasschrade.androidtemplate.activities.core.LoginActivity;
+import de.andreasschrade.androidtemplate.backendless.Bid;
+import de.andreasschrade.androidtemplate.backendless.Tender;
 import de.andreasschrade.androidtemplate.utilities.CustomDialogClass;
 import de.andreasschrade.androidtemplate.utilities.SaveSharedPreference;
 import de.andreasschrade.androidtemplate.utilities.StringUtil;
 import de.andreasschrade.androidtemplate.utilities.Wrapper;
 import de.andreasschrade.androidtemplate.utilities.bitmapUtil;
+import de.andreasschrade.androidtemplate.wrapper.BidderContent;
 
 import static de.andreasschrade.androidtemplate.utilities.LogUtil.logD;
 import static de.andreasschrade.androidtemplate.utilities.LogUtil.makeLogTag;
@@ -67,6 +83,9 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         Log.i("infobase", "base created");
+
+
+
 
 
     }
@@ -101,7 +120,22 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         Log.i("infobase", "setup navbar executed");
 
-        String url = Backendless.UserService.CurrentUser().getObjectId();
+        String url = UserIdStorageFactory.instance().getStorage().get();
+
+        /*Object sex = Backendless.UserService.CurrentUser().getProperty("sex");
+
+        int gender = (int) sex;
+
+        if (gender == 1) {
+
+            Log.i("info", "male");
+
+        } else if (gender == 2) {
+
+            Log.i("info", "female");
+        }*/
+
+
 
         Log.i("info", url);
 
@@ -177,37 +211,90 @@ public abstract class BaseActivity extends AppCompatActivity {
         switch (item) {
             case R.id.nav_bids:
 
-                /*String whereClause = "tender = " + "'" + Wrapper.tenderId + "'";
+                BidderContent.clear();
+
+
+
+                String whereClause = "tender = " + "'" + Wrapper.tenderId + "'";
                 BackendlessDataQuery dataQuery = new BackendlessDataQuery();
                 dataQuery.setWhereClause(whereClause);
+
+
 
 
                 Backendless.Persistence.of( Bid.class ).find(dataQuery,
                         new AsyncCallback<BackendlessCollection<Bid>>() {
                             @Override
-                            public void handleResponse(BackendlessCollection<Bid> bids) {
+                            public void handleResponse(BackendlessCollection<Bid> bid) {
 
-                                Iterator<Bid> iterator = bids.getCurrentPage().iterator();
+
+                                Iterator<Bid> iterator = bid.getCurrentPage().iterator();
 
                                 int counter = 1;
 
                                 while (iterator.hasNext()) {
 
-                                    final Bid bid = iterator.next();
 
-                                    Log.i("info", bid.getPickupline());
+                                    final Bid bids = iterator.next();
 
-                                    String convert = String.valueOf(counter);
+                                    final String objId = bids.getObjectId();
 
-                                    String[] parts = bid.getOwnerId().split("-");
+
+                                    final String convert = String.valueOf(counter);
+
+                                    String[] parts = bids.getOwnerId().split("-");
                                     final String part = parts[4];
 
-                                    DummyContent.addItem(new DummyContent.DummyItem(convert, 1, bid.getPickupline(), bid.getPickupline(), part));
+
+
+                                    Backendless.Persistence.of(BackendlessUser.class).findById(bids.getOwnerId(), new AsyncCallback<BackendlessUser>() {
+                                        @Override
+                                        public void handleResponse(BackendlessUser backendlessUser) {
+
+
+                                            //Object name = backendlessUser.getProperty("firstname");
+
+                                            Log.i("info", "bisuser success");
+
+                                            String name = backendlessUser.getProperty("firstname").toString();
+
+                                            Object dob = backendlessUser.getProperty("dob");
+
+
+                                            Date dateof = (Date) dob;
+
+                                            LocalDate birthdate = new LocalDate (dateof);
+                                            LocalDate now = new LocalDate();
+                                            Years age = Years.yearsBetween(birthdate, now);
+
+
+                                            Log.i("dob", String.valueOf(age.getYears()));
+
+                                            BidderContent.addItem(new BidderContent.BidderItem(convert, part, name, String.valueOf(age.getYears()), bids.getPickupline(), objId));
+
+                                            startActivity(new Intent(BaseActivity.this, BidActivity.class));
+                                            finish();
+
+                                        }
+
+                                        @Override
+                                        public void handleFault(BackendlessFault backendlessFault) {
+
+                                            Log.i("info", "bisuser failed" + backendlessFault.toString());
+
+                                            startActivity(new Intent(BaseActivity.this, BidActivity.class));
+                                            finish();
+
+                                        }
+                                    });
+
+
+
 
                                     counter++;
                                 }
 
-                                startActivity(new Intent(BaseActivity.this, BidActivity.class));
+
 
 
                             }
@@ -217,35 +304,43 @@ public abstract class BaseActivity extends AppCompatActivity {
 
                                 Log.i("info", "fault" + fault.toString());
 
+                                startActivity(new Intent(BaseActivity.this, BidActivity.class));
+                                finish();
+
                             }
-                        });*/
+                        });
 
-                startActivity(new Intent(this, BidActivity.class));
+                    break;
+                    case R.id.nav_home:
 
-                finish();
-                break;
-            case R.id.nav_home:
-                startActivity(new Intent(this, HomeActivity.class));
-                break;
-            case R.id.nav_settings:
-                startActivity(new Intent(this, SettingsActivity.class));
-                finish();
-                break;
-            case R.id.nav_logout:
-                final CustomDialogClass cdd = new CustomDialogClass(BaseActivity.this);
-                cdd.progressDialog("Signing off..");
-                Backendless.UserService.logout( new AsyncCallback<Void>()
-                {
-                    public void handleResponse( Void response )
+                    startActivity(new Intent(this, HomeActivity.class)
+
+                    );
+                    break;
+                    case R.id.nav_settings:
+
+                    startActivity(new Intent(this, SettingsActivity.class)
+
+                    );
+
+                    finish();
+
+                    break;
+                    case R.id.nav_logout:
+                    final CustomDialogClass cdd = new CustomDialogClass(BaseActivity.this);
+                    cdd.progressDialog("Signing off..");
+                    Backendless.UserService.logout(new AsyncCallback<Void>()
+
                     {
-                        cdd.checkDialog();
-                        Log.i("info", "logged out");
-                        SaveSharedPreference.setUserName(BaseActivity.this, "");
-                        startActivity(new Intent(BaseActivity.this, LoginActivity.class));
-                    }
+                        public void handleResponse (Void response)
+                        {
+                            cdd.checkDialog();
+                            Log.i("info", "logged out");
+                            SaveSharedPreference.setUserName(BaseActivity.this, "");
+                            startActivity(new Intent(BaseActivity.this, LoginActivity.class));
+                        }
 
-                    public void handleFault( BackendlessFault fault )
-                    {
+                    public void handleFault(BackendlessFault fault) {
                         cdd.checkDialog();
                         Log.i("info", "logout failed");
 
