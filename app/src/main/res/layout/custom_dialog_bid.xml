@@ -8,42 +8,61 @@
 
     <LinearLayout
         android:layout_width="300dp"
-        android:layout_height="130dp"
-        android:background="@drawable/my_button_bg"
         android:orientation="vertical"
-        android:radius="3dp"
-        android:weightSum="1">
+        android:layout_height="170dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Bid on this date?"
+            android:text="Are you sure you want to bid on this date?"
             android:id="@+id/textView"
-            android:textColor="@color/theme_primary_dark"
+            android:textColor="@color/common_google_signin_btn_text_light_pressed"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="20dp" />
+            android:layout_marginTop="20dp"
+            android:textSize="15sp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:background="@color/theme_primary_dark"
-            android:layout_marginTop="20dp" />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:orientation="vertical"
+        android:weightSum="1"
+        android:layout_height="wrap_content">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="BID"
+            android:text="Bid on this date"
             android:id="@+id/textViewbid"
-            android:layout_gravity="center_horizontal"
-            android:padding="20dp"
-            android:textColor="@color/theme_primary_dark"
-            android:textStyle="bold" />
+            android:textColor="@color/primary_text"
+            android:textStyle="normal|bold"
+            android:textSize="14sp"
+            android:paddingLeft="20dp"
+            android:paddingTop="20dp" />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Cancel"
+            android:id="@+id/textViewbidNo"
+            android:textColor="@color/primary_text"
+            android:textStyle="normal|bold"
+            android:textSize="14sp"
+            android:paddingLeft="20dp"
+            android:paddingTop="20dp" />
+
+    </LinearLayout>
+
+
+
+
 
 
     </LinearLayout>
+
 
 </RelativeLayout>

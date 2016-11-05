@@ -19,6 +19,7 @@ import com.backendless.messaging.PublishOptions;
 import com.backendless.services.messaging.MessageStatus;
 
 import de.andreasschrade.androidtemplate.R;
+import de.andreasschrade.androidtemplate.activities.core.LoginActivity;
 import de.andreasschrade.androidtemplate.wrapper.BidderContent;
 import de.andreasschrade.androidtemplate.activities.base.BaseActivity;
 import de.andreasschrade.androidtemplate.utilities.LogUtil;
@@ -63,7 +64,10 @@ public class BidActivity extends BaseActivity implements BidListFragment.Callbac
                     Log.i("info", "clicked!!!!");
 
 
-                    for (int i = 0; i < BidderContent.count(); i ++) {
+                    startActivity(new Intent(BidActivity.this, GamingActivity.class));
+
+
+                    /*for (int i = 0; i < BidderContent.count(); i ++) {
 
                         Log.i("info", BidderContent.ITEMS.get(i).deviceId);
 
@@ -94,7 +98,7 @@ public class BidActivity extends BaseActivity implements BidListFragment.Callbac
                             }
                         });
 
-                    }
+                    }*/
 
 
 

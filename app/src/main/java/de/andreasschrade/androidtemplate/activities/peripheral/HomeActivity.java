@@ -831,6 +831,19 @@ public class HomeActivity extends BaseActivity implements OnMapReadyCallback, Cl
             final Dialog dialog = new Dialog(this);
             dialog.setContentView(R.layout.custom_dialog_bid);
 
+
+            TextView dialogButtonNo = (TextView) dialog.findViewById(R.id.textViewbidNo);
+
+            dialogButtonNo.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                }
+            });
+
+
+
+
             TextView dialogButton = (TextView) dialog.findViewById(R.id.textViewbid);
             dialogButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -935,57 +948,17 @@ public class HomeActivity extends BaseActivity implements OnMapReadyCallback, Cl
 
                     dialog.show();
 
-                }
-
-
-
-
-        /*Intent detailIntent = new Intent(this, ProfileActivity.class);
-        detailIntent.putExtra(ProfileDetailFragment.ARG_ITEM_ID, 0);
-        startActivity(detailIntent);
-
-        Wrapper.markerId = marker.getTitle();
-
-        Log.i("info", "get=" + marker.getTitle());*/
-
-
-
-
-        /*Bid bid = new Bid();
-        bid.setPickupline("Dinner?");
-        bid.setTender(marker.getTitle());
-
-
-        Backendless.Persistence.of(Bid.class).save(bid, new AsyncCallback<Bid>() {
-            @Override
-            public void handleResponse(Bid bid) {
-
-
-                Log.i("info", "success post");
-
-
             }
 
-            @Override
-            public void handleFault(BackendlessFault backendlessFault) {
 
-                Log.i("info", "failed post" + backendlessFault);
-            }
-        });*/
+
+            return true;
+        }
 
 
 
 
-
-
-
-
-
-
-                return true;
-            }
-
-            @Override
+    @Override
     public boolean onClusterClick(Cluster<Person> cluster) {
 
 
