@@ -11,6 +11,13 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ListView;
 
+import com.backendless.Backendless;
+import com.backendless.async.callback.AsyncCallback;
+import com.backendless.exceptions.BackendlessFault;
+import com.backendless.messaging.DeliveryOptions;
+import com.backendless.messaging.PublishOptions;
+import com.backendless.services.messaging.MessageStatus;
+
 import de.andreasschrade.androidtemplate.R;
 import de.andreasschrade.androidtemplate.wrapper.BidderContent;
 import de.andreasschrade.androidtemplate.activities.base.BaseActivity;
@@ -54,6 +61,42 @@ public class BidActivity extends BaseActivity implements BidListFragment.Callbac
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
                     Log.i("info", "clicked!!!!");
+
+
+                    for (int i = 0; i < BidderContent.count(); i ++) {
+
+                        Log.i("info", BidderContent.ITEMS.get(i).deviceId);
+
+                        DeliveryOptions deliveryOptions = new DeliveryOptions();
+                        deliveryOptions.addPushSinglecast(BidderContent.ITEMS.get(i).deviceId);
+
+                        PublishOptions publishOptions = new PublishOptions();
+                        publishOptions.putHeader("android-ticker-text", "game");
+                        publishOptions.putHeader("android-content-title", "Sonar");
+                        publishOptions.putHeader("android-content-text", "");
+
+                        Backendless.Messaging.publish("You have been invited to a session? Click to start!", publishOptions, deliveryOptions, new AsyncCallback<MessageStatus>() {
+                            @Override
+                            public void handleResponse(MessageStatus response) {
+
+                                Log.i("info", "message sent");
+
+
+                            }
+
+                            @Override
+                            public void handleFault(BackendlessFault backendlessFault) {
+
+
+                                Log.i("info", backendlessFault.toString());
+
+
+                            }
+                        });
+
+                    }
+
+
 
                     return true;
                 }

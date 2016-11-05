@@ -10,10 +10,20 @@ public class Tender {
     private double longitude;
     private String ownerId;
     private String objectId;
+    private Bid[] bidders;
+    private String deviceId;
+
+
 
     public Tender()
     {
     }
+
+    public String getDeviceId() { return deviceId; }
+
+    public void setDeviceId(String deviceId) { this.deviceId = deviceId ;}
+
+    public Bid[] getBidders() {return bidders; }
 
     public String getObjectId()
     {

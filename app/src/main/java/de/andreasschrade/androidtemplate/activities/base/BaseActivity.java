@@ -3,10 +3,7 @@ package de.andreasschrade.androidtemplate.activities.base;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Looper;
 import android.support.design.widget.NavigationView;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
@@ -26,23 +23,15 @@ import com.backendless.BackendlessUser;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
 import com.backendless.persistence.BackendlessDataQuery;
-import com.backendless.persistence.QueryOptions;
 import com.backendless.persistence.local.UserIdStorageFactory;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.joda.time.LocalDate;
 import org.joda.time.Years;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Objects;
-import java.util.concurrent.ExecutionException;
 
 import de.andreasschrade.androidtemplate.R;
 import de.andreasschrade.androidtemplate.activities.core.SettingsActivity;
@@ -50,12 +39,10 @@ import de.andreasschrade.androidtemplate.activities.peripheral.HomeActivity;
 import de.andreasschrade.androidtemplate.activities.peripheral.BidActivity;
 import de.andreasschrade.androidtemplate.activities.core.LoginActivity;
 import de.andreasschrade.androidtemplate.backendless.Bid;
-import de.andreasschrade.androidtemplate.backendless.Tender;
 import de.andreasschrade.androidtemplate.utilities.CustomDialogClass;
 import de.andreasschrade.androidtemplate.utilities.SaveSharedPreference;
 import de.andreasschrade.androidtemplate.utilities.StringUtil;
 import de.andreasschrade.androidtemplate.utilities.Wrapper;
-import de.andreasschrade.androidtemplate.utilities.bitmapUtil;
 import de.andreasschrade.androidtemplate.wrapper.BidderContent;
 
 import static de.andreasschrade.androidtemplate.utilities.LogUtil.logD;
@@ -239,12 +226,13 @@ public abstract class BaseActivity extends AppCompatActivity {
 
                                     final String objId = bids.getObjectId();
 
+                                    final String deviceId = bids.getDeviceId();
+
 
                                     final String convert = String.valueOf(counter);
 
                                     String[] parts = bids.getOwnerId().split("-");
                                     final String part = parts[4];
-
 
 
                                     Backendless.Persistence.of(BackendlessUser.class).findById(bids.getOwnerId(), new AsyncCallback<BackendlessUser>() {
@@ -258,19 +246,20 @@ public abstract class BaseActivity extends AppCompatActivity {
 
                                             String name = backendlessUser.getProperty("firstname").toString();
 
+
                                             Object dob = backendlessUser.getProperty("dob");
 
 
                                             Date dateof = (Date) dob;
 
-                                            LocalDate birthdate = new LocalDate (dateof);
+                                            LocalDate birthdate = new LocalDate(dateof);
                                             LocalDate now = new LocalDate();
                                             Years age = Years.yearsBetween(birthdate, now);
 
 
                                             Log.i("dob", String.valueOf(age.getYears()));
 
-                                            BidderContent.addItem(new BidderContent.BidderItem(convert, part, name, String.valueOf(age.getYears()), bids.getPickupline(), objId));
+                                            BidderContent.addItem(new BidderContent.BidderItem(convert, part, name, String.valueOf(age.getYears()), bids.getPickupline(), objId, deviceId));
 
                                             startActivity(new Intent(BaseActivity.this, BidActivity.class));
                                             finish();
@@ -289,12 +278,8 @@ public abstract class BaseActivity extends AppCompatActivity {
                                     });
 
 
-
-
                                     counter++;
                                 }
-
-
 
 
                             }
@@ -313,17 +298,17 @@ public abstract class BaseActivity extends AppCompatActivity {
                     break;
                     case R.id.nav_home:
 
-                    startActivity(new Intent(this, HomeActivity.class)
+                    Log.i("info", "home");
 
-                    );
+                    startActivity(new Intent(this, HomeActivity.class));
                     break;
                     case R.id.nav_settings:
 
-                    startActivity(new Intent(this, SettingsActivity.class)
+                    startActivity(new Intent(this, SettingsActivity.class));
 
-                    );
+                    Log.i("info", "settings");
 
-                    finish();
+                    //finish();
 
                     break;
                     case R.id.nav_logout:

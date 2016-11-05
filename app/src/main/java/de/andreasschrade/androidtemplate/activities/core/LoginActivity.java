@@ -98,35 +98,12 @@ public class LoginActivity extends AppCompatActivity {
         });
 
 
-        Backendless.Messaging.getDeviceRegistration(new AsyncCallback<DeviceRegistration>() {
-            @Override
-            public void handleResponse(DeviceRegistration deviceRegistration) {
-
-                Log.i("info", "device reg = " + deviceRegistration.getDeviceId());
-            }
-
-            @Override
-            public void handleFault(BackendlessFault backendlessFault) {
-
-            }
-        });
-
-
-
-
-
-
-
-
-
-
-
         if (Backendless.UserService.loggedInUser() == "") {
 
             Log.i("info", "Logged out");
         } else {
 
-            //startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+            startActivity(new Intent(LoginActivity.this, HomeActivity.class));
 
             //String userId = UserIdStorageFactory.instance().getStorage().get();
 
@@ -162,33 +139,6 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                DeliveryOptions deliveryOptions = new DeliveryOptions();
-                deliveryOptions.addPushSinglecast("9885e6514a5a413936");
-
-                PublishOptions publishOptions = new PublishOptions();
-                publishOptions.putHeader( "android-ticker-text", "Testing 1234556" );
-                publishOptions.putHeader( "android-content-title", "This is a notification title" );
-                publishOptions.putHeader("android-content-text", "Push Notifications are cool");
-
-                Backendless.Messaging.publish ("Congrats, you have a new date!",publishOptions, deliveryOptions, new AsyncCallback<MessageStatus>() {
-                    @Override
-                    public void handleResponse(MessageStatus response) {
-
-                        Log.i("info", "message sent");
-
-
-                    }
-
-                    @Override
-                    public void handleFault(BackendlessFault backendlessFault) {
-
-
-                        Log.i("info", backendlessFault.toString());
-
-
-
-                    }
-                });
 
             }
         });

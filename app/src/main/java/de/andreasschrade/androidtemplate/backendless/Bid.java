@@ -10,10 +10,15 @@ public class Bid {
     private String objectId;
     private String tender;
     private String pickupline;
+    private String deviceId;
 
     public Bid()
     {
     }
+
+    public String getDeviceId() { return deviceId; }
+
+    public void setDeviceId(String deviceId) { this.deviceId = deviceId ;}
 
     public String getObjectId()
     {

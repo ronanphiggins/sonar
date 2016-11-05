@@ -5,13 +5,14 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 
 import com.backendless.push.BackendlessBroadcastReceiver;
 
 import de.andreasschrade.androidtemplate.R;
-import de.andreasschrade.androidtemplate.activities.peripheral.HomeActivity;
+import de.andreasschrade.androidtemplate.activities.peripheral.BidActivity;
+import de.andreasschrade.androidtemplate.activities.peripheral.GamingActivity;
 
 /**
  * Created by ronanpiercehiggins on 20/09/2016.
@@ -33,39 +34,70 @@ public class PushReceiver extends BackendlessBroadcastReceiver {
 
     {
 
+            String trigger = intent.getStringExtra("android-ticker-text");
+
+
+            if (!trigger.equalsIgnoreCase("trigger")) {
+
+                String message = intent.getStringExtra("message");
+
+                String title = intent.getStringExtra("android-content-title");
+
+                NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+                Intent notificationIntent;
+
+                if (trigger.equalsIgnoreCase("game")) {
+
+
+                    notificationIntent = new Intent(context, GamingActivity.class);
+
+
+                } else {
+
+
+                    notificationIntent = new Intent(context, BidActivity.class);
+
+
+                }
+
+
+
+                PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
+
+
+                NotificationCompat.Builder notification = new NotificationCompat.Builder(context)
+
+                        .setContentTitle(title).setContentText(message).setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.icon)).setSmallIcon(R.drawable.plus).setDefaults(
+                                Notification.DEFAULT_SOUND
+                                        | Notification.DEFAULT_VIBRATE
+                                        | Notification.DEFAULT_LIGHTS
+                        );
+
+                notification.setContentIntent(contentIntent);
+
+
+                notification.setAutoCancel(true);
+
+                mNotificationManager.notify(NOTIFICATION_ID, notification.build());
 
 
 
 
-            String message = intent.getStringExtra("message");
 
-            NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-
-
-            Intent notificationIntent = new Intent(context, HomeActivity.class);
-
-            PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
+            } else {
 
 
-            NotificationCompat.Builder notification = new NotificationCompat.Builder(context)
-
-                    .setContentTitle("Hello").setContentText(message).setSmallIcon(R.drawable.home).setDefaults(
-            Notification.DEFAULT_SOUND
-                    | Notification.DEFAULT_VIBRATE
-                    | Notification.DEFAULT_LIGHTS
-    );
-
-            notification.setContentIntent(contentIntent);
+                //GameActivity .getInstance().handleBroadcast();
+            }
 
 
-            notification.setAutoCancel(true);
 
-            mNotificationManager.notify(NOTIFICATION_ID, notification.build());
+
+
 
 
         return false;
-
-
 
     }
 

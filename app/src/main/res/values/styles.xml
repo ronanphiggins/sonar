@@ -16,7 +16,7 @@
         <item name="android:background">?attr/colorPrimary</item>
     </style>
 
-    <style name="ToolbarPopUp" parent ="ThemeOverlay.AppCompat.Light">
+    <style name="ToolbarPopUp" parent="ThemeOverlay.AppCompat.Light">
         <item name="android:background">@color/theme_window_background</item>
     </style>
 
@@ -39,6 +39,22 @@
     <style name="SizeSpecificCollapsingToolbarLayout">
         <item name="layout_scrollFlags">scroll|exitUntilCollapsed</item>
         <item name="contentScrim">?attr/colorPrimary</item>
+    </style>
+
+    <style name="Theme.Main.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.Main.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="FullscreenTheme" parent="Theme.Main">
+        <item name="android:actionBarStyle">@style/FullscreenActionBarStyle</item>
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="android:windowBackground">@null</item>
+        <item name="metaButtonBarStyle">?android:attr/buttonBarStyle</item>
+        <item name="metaButtonBarButtonStyle">?android:attr/buttonBarButtonStyle</item>
+    </style>
+
+    <style name="FullscreenActionBarStyle" parent="Widget.AppCompat.ActionBar">
+        <item name="android:background">@color/black_overlay</item>
     </style>
 
 

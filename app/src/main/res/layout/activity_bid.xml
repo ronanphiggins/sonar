@@ -21,10 +21,9 @@
         android:layout_gravity="end|bottom"
         android:layout_marginTop="20dp"
         android:layout_margin="@dimen/regular_offset"
-        android:src="@drawable/heart"
-        app:backgroundTint="#00174A"
-        android:clickable="true"
-        android:visibility="gone"/>
+        android:src="@drawable/whiteheart"
+        app:backgroundTint="@color/theme_primary_dark"
+        android:clickable="true" />
 
     <LinearLayout
         android:layout_width="match_parent"

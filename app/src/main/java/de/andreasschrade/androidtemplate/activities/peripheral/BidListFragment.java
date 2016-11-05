@@ -98,41 +98,82 @@ public class BidListFragment extends ListFragment {
                             public void onDismiss(ListView listView, int[] reverseSortedPositions) {
                                 for (int position : reverseSortedPositions) {
 
-                                    Log.i("info", "swiped");
 
-                                    BidderContent.BidderItem objIdobject = BidderContent.ITEMS.get(position);
-
-                                    String objId = objIdobject.objectId;
-
-                                    Log.i("info", objId);
+                                    Log.i("info", "bidcount = " + BidderContent.count());
 
 
 
-                                    Bid bid = new Bid();
-                                    bid.setObjectId(objId);
 
-                                    Backendless.Persistence.of(Bid.class).remove(bid,
-                                            new AsyncCallback<Long>() {
-                                                public void handleResponse(Long response) {
-                                                    Log.i("info", "delete success");
 
-                                                }
 
-                                                public void handleFault(BackendlessFault fault) {
 
-                                                    Log.i("info", "delete failed" + fault);
+                                        Log.i("info", "swiped");
 
-                                                }
-                                            });
+                                        BidderContent.BidderItem objIdobject = BidderContent.ITEMS.get(position);
 
-                                    BidderContent.removeItem(position);
+                                        String objId = objIdobject.objectId;
+
+                                        Log.i("info", objId);
+
+
+
+                                        Bid bid = new Bid();
+                                        bid.setObjectId(objId);
+
+                                        Backendless.Persistence.of(Bid.class).remove(bid,
+                                                new AsyncCallback<Long>() {
+                                                    public void handleResponse(Long response) {
+                                                        Log.i("info", "delete success");
+
+                                                    }
+
+                                                    public void handleFault(BackendlessFault fault) {
+
+                                                        Log.i("info", "delete failed" + fault);
+
+                                                    }
+                                                });
+
+                                        BidderContent.removeItem(position);
+
+                                        if (BidderContent.count() <= 2) {
+
+
+
+                                            listView.setOnTouchListener(null);
+
+
+
+
+                                        }
+
+
+
+
+
+
+
+
+
+
                                 }
                                 myList.notifyDataSetChanged();
 
                             }
                         });
 
-        listView.setOnTouchListener(touchListener);
+
+        if (BidderContent.count() > 2) {
+
+
+
+            listView.setOnTouchListener(touchListener);
+
+
+
+        }
+
+
 
 
 
@@ -146,6 +187,8 @@ public class BidListFragment extends ListFragment {
 
         // notify callback about the selected list item
         callback.onItemSelected(BidderContent.ITEMS.get(position).id);
+
+        Log.i("info", BidderContent.ITEMS.get(position).deviceId);
 
         //BidderContent.removeItem(position);
 

@@ -44,6 +44,12 @@ public class BidderContent {
         ITEM_MAP.remove(str);
     }
 
+    public static int count() {
+
+        return ITEMS.size();
+
+    }
+
     public static void clear() {
         ITEMS.clear();
         ITEM_MAP.clear();
@@ -58,14 +64,16 @@ public class BidderContent {
         public final String offer;
         public final String bio;
         public final String objectId;
+        public final String deviceId;
 
-        public BidderItem(String id, String photoId, String name, String offer, String bio, String objectId) {
+        public BidderItem(String id, String photoId, String name, String offer, String bio, String objectId, String deviceId) {
             this.id = id;
             this.photoId = photoId;
             this.name = name;
             this.offer = offer;
             this.bio = bio;
             this.objectId = objectId;
+            this.deviceId = deviceId;
         }
     }
 }
