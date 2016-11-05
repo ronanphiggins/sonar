@@ -71,7 +71,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         Log.i("infobase", "base created");
 
-        Log.i("info", "git change");
+        Log.i("info", "git change two");
 
 
 
