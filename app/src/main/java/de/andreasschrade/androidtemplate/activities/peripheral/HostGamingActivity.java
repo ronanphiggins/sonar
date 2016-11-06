@@ -13,19 +13,36 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.backendless.Backendless;
+import com.backendless.async.callback.AsyncCallback;
+import com.backendless.exceptions.BackendlessFault;
+import com.backendless.messaging.DeliveryOptions;
+import com.backendless.messaging.PublishOptions;
+import com.backendless.services.messaging.MessageStatus;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import de.andreasschrade.androidtemplate.R;
 
-public class GamingActivity extends AppCompatActivity {
+public class HostGamingActivity extends AppCompatActivity {
 
     ListView listView;
     Boolean questionAsked = false;
+
+    private static HostGamingActivity ins;
+
+    List<String> values;
+    ArrayAdapter<String> adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gaming);
+
+        ins = this;
+
 
         Window window = this.getWindow();
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -45,20 +62,46 @@ public class GamingActivity extends AppCompatActivity {
 
                 if(!questionAsked) {
 
-
-                    Random rnd = new Random();
-
-
-                    int rndIndex = rnd.nextInt(questions.length);
-
-
                     Log.i("info", "random quesiton button clicked");
+                    Random rnd = new Random();
+                    int rndIndex = rnd.nextInt(questions.length);
+                    final String theQuestion = questions[rndIndex];
 
-                    TextView question = (TextView) findViewById(R.id.question);
+                    DeliveryOptions deliveryOptions = new DeliveryOptions();
+                    deliveryOptions.addPushSinglecast("ECPBBCB691102290");
 
-                    question.setText(questions[rndIndex]);
+                    PublishOptions publishOptions = new PublishOptions();
+                    publishOptions.putHeader("android-ticker-text", "question");
+                    publishOptions.putHeader("android-content-title", theQuestion);
+                    publishOptions.putHeader("android-content-text", "");
 
-                    //questionAsked = true;
+                    Backendless.Messaging.publish("", publishOptions, deliveryOptions, new AsyncCallback<MessageStatus>() {
+                        @Override
+                        public void handleResponse(MessageStatus response) {
+
+                            Log.i("info", "message sent");
+
+
+                            TextView question = (TextView) findViewById(R.id.question);
+                            question.setText(theQuestion);
+
+                            //questionAsked = true;
+
+
+                        }
+
+                        @Override
+                        public void handleFault(BackendlessFault backendlessFault) {
+
+
+                            Log.i("info", backendlessFault.toString());
+
+
+                        }
+                    });
+
+
+
 
 
 
@@ -74,7 +117,7 @@ public class GamingActivity extends AppCompatActivity {
         listView = (ListView) findViewById(R.id.list);
 
         // Defined Array values to show in ListView
-        String[] values = new String[] {};
+        values = new ArrayList<String>();
 
         // Define a new Adapter
         // First parameter - Context
@@ -82,7 +125,7 @@ public class GamingActivity extends AppCompatActivity {
         // Third parameter - ID of the TextView to which the data is written
         // Forth - the Array of data
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+        adapter = new ArrayAdapter<String>(this,
                 R.layout.custom_textview, values);
 
 
@@ -115,5 +158,25 @@ public class GamingActivity extends AppCompatActivity {
 
 
 
+    }
+
+
+    public static HostGamingActivity  getInstance(){
+        return ins;
+    }
+
+
+    public void updateTheAnswer(final String answer) {
+        HostGamingActivity.this.runOnUiThread(new Runnable() {
+            public void run() {
+
+
+                Log.i("info", answer);
+                values.add(answer);
+                adapter.notifyDataSetChanged();
+
+
+            }
+        });
     }
 }

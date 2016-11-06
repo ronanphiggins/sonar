@@ -7,12 +7,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 
 import com.backendless.push.BackendlessBroadcastReceiver;
 
 import de.andreasschrade.androidtemplate.R;
 import de.andreasschrade.androidtemplate.activities.peripheral.BidActivity;
-import de.andreasschrade.androidtemplate.activities.peripheral.GamingActivity;
+import de.andreasschrade.androidtemplate.activities.peripheral.HostGamingActivity;
+import de.andreasschrade.androidtemplate.activities.peripheral.PlayerGamingActivity;
 
 /**
  * Created by ronanpiercehiggins on 20/09/2016.
@@ -37,7 +39,7 @@ public class PushReceiver extends BackendlessBroadcastReceiver {
             String trigger = intent.getStringExtra("android-ticker-text");
 
 
-            if (!trigger.equalsIgnoreCase("trigger")) {
+            if (trigger.equalsIgnoreCase("trigger")) {
 
                 String message = intent.getStringExtra("message");
 
@@ -50,7 +52,7 @@ public class PushReceiver extends BackendlessBroadcastReceiver {
                 if (trigger.equalsIgnoreCase("game")) {
 
 
-                    notificationIntent = new Intent(context, GamingActivity.class);
+                    notificationIntent = new Intent(context, HostGamingActivity.class);
 
 
                 } else {
@@ -85,10 +87,48 @@ public class PushReceiver extends BackendlessBroadcastReceiver {
 
 
 
-            } else {
+            } else if (trigger.equalsIgnoreCase("question")){
 
 
-                //GameActivity .getInstance().handleBroadcast();
+                try {
+
+                    String question = intent.getStringExtra("android-content-title");
+
+                    PlayerGamingActivity .getInstance().updateTheQuestion(question);
+
+                    Log.i("info", "try");
+
+                } catch (Exception e) {
+
+
+                    Log.i("info", "catch" + e);
+
+
+                }
+
+
+            } else if (trigger.equalsIgnoreCase("answer")) {
+
+
+                try {
+
+                    String answer = intent.getStringExtra("android-content-title");
+
+                    HostGamingActivity .getInstance().updateTheAnswer(answer);
+
+                    Log.i("info", "try");
+
+                } catch (Exception e) {
+
+
+                    Log.i("info", "catch" + e);
+
+
+                }
+
+
+
+
             }
 
 

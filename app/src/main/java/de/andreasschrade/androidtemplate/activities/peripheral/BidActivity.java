@@ -12,11 +12,10 @@ import android.view.View;
 import android.widget.ListView;
 
 import com.backendless.Backendless;
+import com.backendless.BackendlessUser;
+import com.backendless.DeviceRegistration;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
-import com.backendless.messaging.DeliveryOptions;
-import com.backendless.messaging.PublishOptions;
-import com.backendless.services.messaging.MessageStatus;
 
 import de.andreasschrade.androidtemplate.R;
 import de.andreasschrade.androidtemplate.activities.core.LoginActivity;
@@ -64,7 +63,37 @@ public class BidActivity extends BaseActivity implements BidListFragment.Callbac
                     Log.i("info", "clicked!!!!");
 
 
-                    startActivity(new Intent(BidActivity.this, GamingActivity.class));
+                    Backendless.Messaging.getDeviceRegistration(new AsyncCallback<DeviceRegistration>() {
+                        @Override
+                        public void handleResponse(DeviceRegistration deviceRegistration) {
+
+
+                            if (deviceRegistration.getDeviceId().equalsIgnoreCase("04157df43901b531")) {
+
+                                Intent i = new Intent(BidActivity.this, HostGamingActivity.class);
+                                i.putExtra("deviceId", deviceRegistration.getDeviceId());
+                                startActivity(i);
+
+                            } else {
+
+                                Intent i = new Intent(BidActivity.this, PlayerGamingActivity.class);
+                                i.putExtra("deviceId", deviceRegistration.getDeviceId());
+                                startActivity(i);
+
+                            }
+
+
+                        }
+
+                        @Override
+                        public void handleFault(BackendlessFault backendlessFault) {
+
+                        }
+
+                    });
+
+
+
 
 
                     /*for (int i = 0; i < BidderContent.count(); i ++) {

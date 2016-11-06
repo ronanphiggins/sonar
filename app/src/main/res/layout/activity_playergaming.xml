@@ -11,23 +11,13 @@
     android:background="@color/theme_primary_light"
     tools:context="de.andreasschrade.androidtemplate.activities.peripheral.HostGamingActivity">
 
-
-    <Button
-        android:background="@drawable/whiteheart"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="26dp"
-        android:id="@+id/randomQuestion"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
-
     <ListView
         android:layout_width="match_parent"
-        android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
         android:layout_height="150dp"
         android:id="@+id/list"
-        android:layout_below="@+id/question" />
+        android:layout_below="@+id/submitAnswer"
+        android:layout_alignParentStart="true" />
 
     <TextView
 
@@ -36,9 +26,26 @@
         android:id="@+id/question"
         android:textColor="#ffffff"
         android:textSize="20sp"
-        android:layout_below="@+id/randomQuestion"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="30dp" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:text="Your answer?"
+        android:ems="10"
+        android:layout_below="@+id/question"
+        android:layout_marginTop="86dp"
+        android:id="@+id/answer"
+        android:textColor="#ffffff" />
+
+    <Button
+        android:text="Submit"
+        android:layout_width="wrap_content"
+        android:layout_below="@+id/answer"
+        android:layout_height="wrap_content"
+        android:id="@+id/submitAnswer" />
 
 
 </RelativeLayout>
