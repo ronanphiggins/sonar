@@ -8,18 +8,32 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:background="@color/theme_primary_light"
+    android:background="@color/theme_primary_dark"
     tools:context="de.andreasschrade.androidtemplate.activities.peripheral.HostGamingActivity">
 
-
-    <Button
-        android:background="@drawable/whiteheart"
+    <RadioButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="26dp"
-        android:id="@+id/randomQuestion"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:text="Player Online"
+        android:id="@+id/radioButton"
+        android:layout_centerHorizontal="true"
+        android:checked="false"
+        android:clickable="false"
+        android:enabled="false" />
+
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/plus"
+        android:layout_below="@+id/radioButton"
+        app:backgroundTint="@color/theme_primary_accent"
+        android:clickable="true"
+        android:layout_marginLeft="@dimen/regular_offset"
+        android:layout_marginRight="@dimen/regular_offset"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp" />
 
     <ListView
         android:layout_width="match_parent"
@@ -36,7 +50,7 @@
         android:id="@+id/question"
         android:textColor="#ffffff"
         android:textSize="20sp"
-        android:layout_below="@+id/randomQuestion"
+        android:layout_below="@+id/fab8"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="30dp" />
 

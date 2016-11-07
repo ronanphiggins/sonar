@@ -171,7 +171,7 @@ public class LoginActivity extends AppCompatActivity {
                                             public void handleResponse(BackendlessUser backendlessUser) {
 
                                                 cdd.checkDialog();
-                                                //SaveSharedPreference.setUserName(LoginActivity.this, user.getObjectId());
+                                                SaveSharedPreference.setUserName(LoginActivity.this, user.getObjectId());
                                                 startActivity(new Intent(LoginActivity.this, HomeActivity.class));
 
 

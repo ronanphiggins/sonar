@@ -36,11 +36,6 @@ public class PlayerGamingActivity extends AppCompatActivity {
         answer.setEnabled(false);
 
 
-        Window window = this.getWindow();
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        window.setStatusBarColor(this.getResources().getColor(R.color.theme_primary_light));
-
         Button submitAnswer = (Button) findViewById(R.id.submitAnswer);
 
         submitAnswer.setOnClickListener(new View.OnClickListener() {
@@ -102,8 +97,43 @@ public class PlayerGamingActivity extends AppCompatActivity {
                 answer.setEnabled(true);
 
 
-
             }
         });
     }
+
+    public void onResume() {
+        super.onResume();
+
+
+        Log.i("info", "resumed");
+
+        DeliveryOptions deliveryOptions = new DeliveryOptions();
+        deliveryOptions.addPushSinglecast("04157df43901b531");
+
+        PublishOptions publishOptions = new PublishOptions();
+        publishOptions.putHeader("android-ticker-text", "resumed");
+        publishOptions.putHeader("android-content-title", "");
+        publishOptions.putHeader("android-content-text", "");
+
+        Backendless.Messaging.publish("", publishOptions, deliveryOptions, new AsyncCallback<MessageStatus>() {
+            @Override
+            public void handleResponse(MessageStatus response) {
+
+                Log.i("info", "message sent");
+
+
+            }
+
+            @Override
+            public void handleFault(BackendlessFault backendlessFault) {
+
+
+                Log.i("info", backendlessFault.toString());
+
+
+            }
+        });
+
+    }
+
 }

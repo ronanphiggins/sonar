@@ -1,8 +1,11 @@
 package de.andreasschrade.androidtemplate.activities.peripheral;
 
+import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -10,10 +13,12 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.backendless.Backendless;
+import com.backendless.DeviceRegistration;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
 import com.backendless.messaging.DeliveryOptions;
@@ -44,72 +49,73 @@ public class HostGamingActivity extends AppCompatActivity {
         ins = this;
 
 
-        Window window = this.getWindow();
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        window.setStatusBarColor(this.getResources().getColor(R.color.theme_primary_light));
-
         final String[] questions = new String[] {"What is your favourite colour?", "What is your favourite animal?", "What is your favourite season?", "What is your favourite drink?"};
 
 
-        Button randomQuestion = (Button) findViewById(R.id.randomQuestion);
+        FloatingActionButton mFloatingActionButton   = (FloatingActionButton)findViewById(R.id.fab8);
 
-        randomQuestion.setOnClickListener(new View.OnClickListener() {
-
-
+        mFloatingActionButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View v) {
-
-                if(!questionAsked) {
-
-                    Log.i("info", "random quesiton button clicked");
-                    Random rnd = new Random();
-                    int rndIndex = rnd.nextInt(questions.length);
-                    final String theQuestion = questions[rndIndex];
-
-                    DeliveryOptions deliveryOptions = new DeliveryOptions();
-                    deliveryOptions.addPushSinglecast("ECPBBCB691102290");
-
-                    PublishOptions publishOptions = new PublishOptions();
-                    publishOptions.putHeader("android-ticker-text", "question");
-                    publishOptions.putHeader("android-content-title", theQuestion);
-                    publishOptions.putHeader("android-content-text", "");
-
-                    Backendless.Messaging.publish("", publishOptions, deliveryOptions, new AsyncCallback<MessageStatus>() {
-                        @Override
-                        public void handleResponse(MessageStatus response) {
-
-                            Log.i("info", "message sent");
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    Log.i("info", "clicked!!!!");
 
 
-                            TextView question = (TextView) findViewById(R.id.question);
-                            question.setText(theQuestion);
+                    if(!questionAsked) {
 
-                            //questionAsked = true;
+                        Log.i("info", "random quesiton button clicked");
+                        Random rnd = new Random();
+                        int rndIndex = rnd.nextInt(questions.length);
+                        final String theQuestion = questions[rndIndex];
+
+                        DeliveryOptions deliveryOptions = new DeliveryOptions();
+                        deliveryOptions.addPushSinglecast("ECPBBCB691102290");
+
+                        PublishOptions publishOptions = new PublishOptions();
+                        publishOptions.putHeader("android-ticker-text", "question");
+                        publishOptions.putHeader("android-content-title", theQuestion);
+                        publishOptions.putHeader("android-content-text", "");
+
+                        Backendless.Messaging.publish("", publishOptions, deliveryOptions, new AsyncCallback<MessageStatus>() {
+                            @Override
+                            public void handleResponse(MessageStatus response) {
+
+                                Log.i("info", "message sent");
 
 
-                        }
+                                TextView question = (TextView) findViewById(R.id.question);
+                                question.setText(theQuestion);
 
-                        @Override
-                        public void handleFault(BackendlessFault backendlessFault) {
-
-
-                            Log.i("info", backendlessFault.toString());
+                                //questionAsked = true;
 
 
-                        }
-                    });
+                            }
+
+                            @Override
+                            public void handleFault(BackendlessFault backendlessFault) {
+
+
+                                Log.i("info", backendlessFault.toString());
+
+
+                            }
+                        });
 
 
 
 
 
 
+                    }
+
+
+                    return true;
                 }
-
-
+                return true; // consume the event
             }
         });
+
+
 
 
 
@@ -174,6 +180,23 @@ public class HostGamingActivity extends AppCompatActivity {
                 Log.i("info", answer);
                 values.add(answer);
                 adapter.notifyDataSetChanged();
+
+
+            }
+        });
+    }
+
+    public void playerStatus() {
+        HostGamingActivity.this.runOnUiThread(new Runnable() {
+            public void run() {
+
+
+                RadioButton radio = (RadioButton) findViewById(R.id.radioButton);
+                radio.toggle();
+
+
+                Toast.makeText(HostGamingActivity.this, "Player Online",
+                        Toast.LENGTH_LONG).show();
 
 
             }

@@ -107,14 +107,14 @@ public class PushReceiver extends BackendlessBroadcastReceiver {
                 }
 
 
-            } else if (trigger.equalsIgnoreCase("answer")) {
+            } else if (trigger.equalsIgnoreCase("resumed")) {
 
 
                 try {
 
                     String answer = intent.getStringExtra("android-content-title");
 
-                    HostGamingActivity .getInstance().updateTheAnswer(answer);
+                    HostGamingActivity .getInstance().playerStatus();
 
                     Log.i("info", "try");
 
