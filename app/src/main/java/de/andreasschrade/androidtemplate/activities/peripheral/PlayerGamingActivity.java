@@ -35,6 +35,8 @@ public class PlayerGamingActivity extends AppCompatActivity {
         answer = (EditText) findViewById(R.id.answer);
         answer.setEnabled(false);
 
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
 
         Button submitAnswer = (Button) findViewById(R.id.submitAnswer);
 
@@ -112,6 +114,41 @@ public class PlayerGamingActivity extends AppCompatActivity {
 
         PublishOptions publishOptions = new PublishOptions();
         publishOptions.putHeader("android-ticker-text", "resumed");
+        publishOptions.putHeader("android-content-title", "");
+        publishOptions.putHeader("android-content-text", "");
+
+        Backendless.Messaging.publish("", publishOptions, deliveryOptions, new AsyncCallback<MessageStatus>() {
+            @Override
+            public void handleResponse(MessageStatus response) {
+
+                Log.i("info", "message sent");
+
+
+            }
+
+            @Override
+            public void handleFault(BackendlessFault backendlessFault) {
+
+
+                Log.i("info", backendlessFault.toString());
+
+
+            }
+        });
+
+    }
+
+    public void onPause() {
+        super.onResume();
+
+
+        Log.i("info", "paused");
+
+        DeliveryOptions deliveryOptions = new DeliveryOptions();
+        deliveryOptions.addPushSinglecast("04157df43901b531");
+
+        PublishOptions publishOptions = new PublishOptions();
+        publishOptions.putHeader("android-ticker-text", "paused");
         publishOptions.putHeader("android-content-title", "");
         publishOptions.putHeader("android-content-text", "");
 

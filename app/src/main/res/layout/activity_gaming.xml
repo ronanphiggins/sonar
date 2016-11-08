@@ -19,7 +19,7 @@
         android:layout_centerHorizontal="true"
         android:checked="false"
         android:clickable="false"
-        android:enabled="false" />
+        android:enabled="true" />
 
 
     <android.support.design.widget.FloatingActionButton

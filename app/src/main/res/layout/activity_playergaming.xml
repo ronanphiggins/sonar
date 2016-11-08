@@ -33,12 +33,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textPersonName"
-        android:text="Your answer?"
         android:ems="10"
+        android:windowSoftInputMode="stateHidden"
         android:layout_below="@+id/question"
         android:layout_marginTop="86dp"
         android:id="@+id/answer"
-        android:textColor="#ffffff" />
+        android:textColor="#ffffff"
+        android:hint="Answer?" />
 
     <Button
         android:text="Submit"

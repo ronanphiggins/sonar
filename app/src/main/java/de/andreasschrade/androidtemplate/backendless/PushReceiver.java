@@ -114,7 +114,7 @@ public class PushReceiver extends BackendlessBroadcastReceiver {
 
                     String answer = intent.getStringExtra("android-content-title");
 
-                    HostGamingActivity .getInstance().playerStatus();
+                    HostGamingActivity .getInstance().playerStatusResume();
 
                     Log.i("info", "try");
 
@@ -127,6 +127,48 @@ public class PushReceiver extends BackendlessBroadcastReceiver {
                 }
 
 
+
+
+            } else if (trigger.equalsIgnoreCase("paused")) {
+
+
+                try {
+
+                    String answer = intent.getStringExtra("android-content-title");
+
+                    HostGamingActivity .getInstance().playerStatusPaused();
+
+                    Log.i("info", "try");
+
+                } catch (Exception e) {
+
+
+                    Log.i("info", "catch" + e);
+
+
+                }
+
+
+
+
+            } else if (trigger.equalsIgnoreCase("answer")) {
+
+
+                try {
+
+                    String question = intent.getStringExtra("android-content-title");
+
+                    HostGamingActivity.getInstance().updateTheAnswer(question);
+
+                    Log.i("info", "try");
+
+                } catch (Exception e) {
+
+
+                    Log.i("info", "catch" + e);
+
+
+                }
 
 
             }

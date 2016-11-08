@@ -186,17 +186,34 @@ public class HostGamingActivity extends AppCompatActivity {
         });
     }
 
-    public void playerStatus() {
+    public void playerStatusResume() {
         HostGamingActivity.this.runOnUiThread(new Runnable() {
             public void run() {
 
 
                 RadioButton radio = (RadioButton) findViewById(R.id.radioButton);
-                radio.toggle();
+                radio.setChecked(true);
 
 
-                Toast.makeText(HostGamingActivity.this, "Player Online",
-                        Toast.LENGTH_LONG).show();
+                /*Toast.makeText(HostGamingActivity.this, "Player Online",
+                        Toast.LENGTH_LONG).show();*/
+
+
+            }
+        });
+    }
+
+    public void playerStatusPaused() {
+        HostGamingActivity.this.runOnUiThread(new Runnable() {
+            public void run() {
+
+
+                RadioButton radio = (RadioButton) findViewById(R.id.radioButton);
+                radio.setChecked(false);
+
+
+                /*Toast.makeText(HostGamingActivity.this, "Player Online",
+                        Toast.LENGTH_LONG).show();*/
 
 
             }
