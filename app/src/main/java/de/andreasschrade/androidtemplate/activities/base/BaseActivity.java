@@ -3,6 +3,7 @@ package de.andreasschrade.androidtemplate.activities.base;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
@@ -43,6 +44,7 @@ import de.andreasschrade.androidtemplate.utilities.CustomDialogClass;
 import de.andreasschrade.androidtemplate.utilities.SaveSharedPreference;
 import de.andreasschrade.androidtemplate.utilities.StringUtil;
 import de.andreasschrade.androidtemplate.utilities.Wrapper;
+import de.andreasschrade.androidtemplate.utilities.bitmapUtil;
 import de.andreasschrade.androidtemplate.wrapper.BidderContent;
 
 import static de.andreasschrade.androidtemplate.utilities.LogUtil.logD;
@@ -142,6 +144,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         Glide.with(this).load(finalurl).asBitmap().fitCenter().into(new BitmapImageViewTarget(img) {
             @Override
             protected void setResource(Bitmap resource) {
+
                 RoundedBitmapDrawable circularBitmapDrawable = RoundedBitmapDrawableFactory.create(getApplicationContext().getResources(), resource);
                 circularBitmapDrawable.setCircular(true);
                 img.setImageDrawable(circularBitmapDrawable);
@@ -149,6 +152,21 @@ public abstract class BaseActivity extends AppCompatActivity {
         });
 
         logD(TAG, "navigation drawer setup finished");
+
+        img.setOnClickListener(new View.OnClickListener() {
+
+
+            @Override
+            public void onClick(View v) {
+
+
+                Log.i("info", "nav img clicked");
+
+
+            }
+        });
+
+
     }
 
     /**

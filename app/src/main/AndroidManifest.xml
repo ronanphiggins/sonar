@@ -32,20 +32,20 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyD7oezpWuqCUaV-ZxMOLLmBzh21wjjBKN0" />
 
-        <activity android:name=".activities.peripheral.BidActivity" />
+        <activity android:name=".activities.peripheral.BidActivity" android:screenOrientation="portrait"/>
         <activity
             android:name=".activities.peripheral.ProfileActivity"
             android:label=""
-            android:parentActivityName=".activities.peripheral.BidActivity" />
+            android:parentActivityName=".activities.peripheral.BidActivity" android:screenOrientation="portrait" />
         <activity
             android:name=".activities.peripheral.HomeActivity"
             android:label=""
-            android:parentActivityName=".activities.peripheral.BidActivity" />
+            android:parentActivityName=".activities.peripheral.BidActivity" android:screenOrientation="portrait" />
         <activity
             android:name=".activities.core.SettingsActivity"
             android:label="Settings"
-            android:parentActivityName=".activities.peripheral.BidActivity" />
-        <activity android:name=".activities.core.LoginActivity">
+            android:parentActivityName=".activities.peripheral.BidActivity" android:screenOrientation="portrait" />
+        <activity android:name=".activities.core.LoginActivity" android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -53,7 +53,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.core.RegisterActivity" />
+        <activity android:name=".activities.core.RegisterActivity" android:screenOrientation="portrait" />
         <activity android:name="com.soundcloud.android.crop.CropImageActivity" />
 
         <receiver
@@ -67,8 +67,9 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".activities.peripheral.HostGamingActivity" />
-        <activity android:name=".activities.peripheral.PlayerGamingActivity"></activity>
+        <activity android:name=".activities.peripheral.HostGamingActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".activities.peripheral.PlayerGamingActivity" android:screenOrientation="portrait"></activity>
+        <activity android:name=".activities.peripheral.GamingActivity" android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

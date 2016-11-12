@@ -70,7 +70,11 @@ public class BidActivity extends BaseActivity implements BidListFragment.Callbac
 
                             if (deviceRegistration.getDeviceId().equalsIgnoreCase("04157df43901b531")) {
 
-                                Intent i = new Intent(BidActivity.this, HostGamingActivity.class);
+                                /*Intent i = new Intent(BidActivity.this, HostGamingActivity.class);
+                                i.putExtra("deviceId", deviceRegistration.getDeviceId());
+                                startActivity(i);*/
+
+                                Intent i = new Intent(BidActivity.this, GamingActivity.class);
                                 i.putExtra("deviceId", deviceRegistration.getDeviceId());
                                 startActivity(i);
 
