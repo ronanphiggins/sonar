@@ -69,7 +69,8 @@
 
         <activity android:name=".activities.peripheral.HostGamingActivity" android:screenOrientation="portrait"/>
         <activity android:name=".activities.peripheral.PlayerGamingActivity" android:screenOrientation="portrait"></activity>
-        <activity android:name=".activities.peripheral.GamingActivity" android:screenOrientation="portrait"></activity>
+        <activity android:name=".activities.peripheral.InitiatorGamingActivity" android:screenOrientation="portrait"></activity>
+        <activity android:name=".activities.peripheral.GuestGamingActivity" android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

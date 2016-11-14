@@ -12,13 +12,11 @@ import android.view.View;
 import android.widget.ListView;
 
 import com.backendless.Backendless;
-import com.backendless.BackendlessUser;
 import com.backendless.DeviceRegistration;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
 
 import de.andreasschrade.androidtemplate.R;
-import de.andreasschrade.androidtemplate.activities.core.LoginActivity;
 import de.andreasschrade.androidtemplate.wrapper.BidderContent;
 import de.andreasschrade.androidtemplate.activities.base.BaseActivity;
 import de.andreasschrade.androidtemplate.utilities.LogUtil;
@@ -74,13 +72,17 @@ public class BidActivity extends BaseActivity implements BidListFragment.Callbac
                                 i.putExtra("deviceId", deviceRegistration.getDeviceId());
                                 startActivity(i);*/
 
-                                Intent i = new Intent(BidActivity.this, GamingActivity.class);
+                                Intent i = new Intent(BidActivity.this, GuestGamingActivity.class);
                                 i.putExtra("deviceId", deviceRegistration.getDeviceId());
                                 startActivity(i);
 
                             } else {
 
-                                Intent i = new Intent(BidActivity.this, PlayerGamingActivity.class);
+                                /*Intent i = new Intent(BidActivity.this, PlayerGamingActivity.class);
+                                i.putExtra("deviceId", deviceRegistration.getDeviceId());
+                                startActivity(i);*/
+
+                                Intent i = new Intent(BidActivity.this, GuestGamingActivity.class);
                                 i.putExtra("deviceId", deviceRegistration.getDeviceId());
                                 startActivity(i);
 

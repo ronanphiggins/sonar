@@ -110,6 +110,8 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         Log.i("infobase", "setup navbar executed");
 
+        UserIdStorageFactory.instance().init(this);
+
         String url = UserIdStorageFactory.instance().getStorage().get();
 
         /*Object sex = Backendless.UserService.CurrentUser().getProperty("sex");

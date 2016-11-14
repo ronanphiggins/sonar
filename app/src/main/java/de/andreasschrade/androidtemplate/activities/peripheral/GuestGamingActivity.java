@@ -1,6 +1,5 @@
 package de.andreasschrade.androidtemplate.activities.peripheral;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -20,9 +19,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.backendless.Backendless;
-import com.backendless.DeviceRegistration;
+import com.backendless.BackendlessUser;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
+import com.backendless.messaging.DeliveryOptions;
+import com.backendless.messaging.PublishOptions;
+import com.backendless.services.messaging.MessageStatus;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 
@@ -32,15 +34,16 @@ import java.util.Random;
 
 import de.andreasschrade.androidtemplate.R;
 import de.andreasschrade.androidtemplate.activities.base.BaseActivity;
-import de.andreasschrade.androidtemplate.utilities.LogUtil;
-import de.andreasschrade.androidtemplate.wrapper.BidderContent;
+import de.andreasschrade.androidtemplate.backendless.Session;
+import de.andreasschrade.androidtemplate.backendless.Tender;
+import de.andreasschrade.androidtemplate.backendless.Users;
 
 /**
  * Lists all available quotes. This Activity supports a single pane (= smartphones) and a two pane mode (= large screens with >= 600dp width).
  *
  * Created by Andreas Schrade on 14.12.2015.
  */
-public class GamingActivity extends BaseActivity {
+public class GuestGamingActivity extends BaseActivity {
     /**
      * Whether or not the activity is running on a device with a large screen
      */
@@ -53,14 +56,12 @@ public class GamingActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_gamingshell);
+        setContentView(R.layout.activity_gaming_guest);
 
         setupToolbar();
         setTitle("");
 
-        final String[] questions = new String[] {"What is your favourite colour?", "What is your favourite animal?", "What is your favourite season?", "What is your favourite drink?"};
 
-        final TextView question = (TextView) findViewById(R.id.thequestion);
 
         final ImageView img = (ImageView) findViewById(R.id.playerpic1);
         Glide.with(this).load("https://api.backendless.com/A0819152-C875-C222-FF18-0516AB9ACC00/v1/files/media/1072A8E44200.png").asBitmap().fitCenter().into(new BitmapImageViewTarget(img) {
@@ -115,13 +116,41 @@ public class GamingActivity extends BaseActivity {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
                     Log.i("info", "clicked!!!!");
 
-                    Random rnd = new Random();
-                    int rndIndex = rnd.nextInt(questions.length);
-                    final String theQuestion = questions[rndIndex];
 
-                    question.setText(theQuestion);
+                    Backendless.Persistence.of(Session.class).findById("207CBAA5-A0B5-72F9-FFE4-B52E9D3CB700", new AsyncCallback<Session>() {
+                        @Override
+                        public void handleResponse(Session session) {
 
-                    mFloatingActionButton.setEnabled(false);
+
+                            Log.i("info", "Round = " + session.getRound());
+
+
+                            BackendlessUser[] players = session.getPlayers();
+
+
+                            for (BackendlessUser user : players) {
+
+                                Log.i("info", "user name = " + user.getProperty("firstname"));
+
+
+                            }
+
+
+
+
+
+
+                        }
+
+                        @Override
+                        public void handleFault(BackendlessFault backendlessFault) {
+
+
+                        }
+
+
+                    });
+
 
 
 
