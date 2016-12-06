@@ -107,6 +107,8 @@ public class InitiatorGamingActivity extends BaseActivity {
         });
 
 
+
+
         final FloatingActionButton mFloatingActionButton   = (FloatingActionButton)findViewById(R.id.fab8);
 
         mFloatingActionButton.setOnTouchListener(new View.OnTouchListener() {

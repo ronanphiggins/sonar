@@ -37,6 +37,7 @@ import de.andreasschrade.androidtemplate.activities.base.BaseActivity;
 import de.andreasschrade.androidtemplate.backendless.Session;
 import de.andreasschrade.androidtemplate.backendless.Tender;
 import de.andreasschrade.androidtemplate.backendless.Users;
+import de.andreasschrade.androidtemplate.utilities.StringUtil;
 
 /**
  * Lists all available quotes. This Activity supports a single pane (= smartphones) and a two pane mode (= large screens with >= 600dp width).
@@ -63,7 +64,67 @@ public class GuestGamingActivity extends BaseActivity {
 
 
 
-        final ImageView img = (ImageView) findViewById(R.id.playerpic1);
+        final ImageView img1 = (ImageView) findViewById(R.id.playerpic1);
+        final ImageView img2 = (ImageView) findViewById(R.id.playerpic2);
+        final ImageView img3 = (ImageView) findViewById(R.id.playerpic3);
+        final ImageView img4 = (ImageView) findViewById(R.id.playerpic4);
+
+        final ImageView[] IMGS = {img1, img2, img3, img4};
+
+        Backendless.Persistence.of(Session.class).findById("207CBAA5-A0B5-72F9-FFE4-B52E9D3CB700", new AsyncCallback<Session>() {
+            @Override
+            public void handleResponse(Session session) {
+
+
+                //TextView textView = (TextView) findViewById(R.id.textView2);
+
+                //textView.setText(session.getRound());
+
+                setTitle("Round" + " " + session.getRound());
+
+
+                Log.i("info", "Round = " + session.getRound());
+
+                int counter = 0;
+
+
+                BackendlessUser[] players = session.getPlayers();
+                for (BackendlessUser user : players) {
+
+                    //Log.i("info", "userid = " + user.getProperty("objectId"));
+
+                    final String url = StringUtil.splitString(user.getProperty("objectId").toString());
+
+                    Log.i("info", url);
+
+                    Log.i("info", IMGS[counter].toString());
+
+                    final ImageView theimage = IMGS[counter];
+                    Glide.with(GuestGamingActivity.this).load("https://api.backendless.com/A0819152-C875-C222-FF18-0516AB9ACC00/v1/files/media/" + url + ".png").asBitmap().fitCenter().into(new BitmapImageViewTarget(theimage) {
+                        @Override
+                        protected void setResource(Bitmap resource) {
+
+                            RoundedBitmapDrawable circularBitmapDrawable = RoundedBitmapDrawableFactory.create(getApplicationContext().getResources(), resource);
+                            circularBitmapDrawable.setCircular(true);
+                            theimage.setImageDrawable(circularBitmapDrawable);
+                        }
+                    });
+
+                    counter ++;
+
+                }
+            }
+
+            @Override
+            public void handleFault(BackendlessFault backendlessFault) {
+
+
+            }
+        });
+
+
+
+        /*final ImageView img = (ImageView) findViewById(R.id.playerpic1);
         Glide.with(this).load("https://api.backendless.com/A0819152-C875-C222-FF18-0516AB9ACC00/v1/files/media/1072A8E44200.png").asBitmap().fitCenter().into(new BitmapImageViewTarget(img) {
             @Override
             protected void setResource(Bitmap resource) {
@@ -105,7 +166,7 @@ public class GuestGamingActivity extends BaseActivity {
                 circularBitmapDrawable.setCircular(true);
                 img4.setImageDrawable(circularBitmapDrawable);
             }
-        });
+        });*/
 
 
         final FloatingActionButton mFloatingActionButton   = (FloatingActionButton)findViewById(R.id.fab8);
@@ -117,39 +178,6 @@ public class GuestGamingActivity extends BaseActivity {
                     Log.i("info", "clicked!!!!");
 
 
-                    Backendless.Persistence.of(Session.class).findById("207CBAA5-A0B5-72F9-FFE4-B52E9D3CB700", new AsyncCallback<Session>() {
-                        @Override
-                        public void handleResponse(Session session) {
-
-
-                            Log.i("info", "Round = " + session.getRound());
-
-
-                            BackendlessUser[] players = session.getPlayers();
-
-
-                            for (BackendlessUser user : players) {
-
-                                Log.i("info", "user name = " + user.getProperty("firstname"));
-
-
-                            }
-
-
-
-
-
-
-                        }
-
-                        @Override
-                        public void handleFault(BackendlessFault backendlessFault) {
-
-
-                        }
-
-
-                    });
 
 
 
