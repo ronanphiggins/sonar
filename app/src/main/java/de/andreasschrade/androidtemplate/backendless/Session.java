@@ -15,6 +15,7 @@ public class Session {
     private String objectId;
     private String round;
     private BackendlessUser[] players;
+    private Answer[] round_one_answers;
 
 
     public Session()
@@ -43,6 +44,8 @@ public class Session {
     }
 
     public BackendlessUser[] getPlayers() {return players; }
+
+    public Answer[] getAnswers() { return round_one_answers; }
 
 
 

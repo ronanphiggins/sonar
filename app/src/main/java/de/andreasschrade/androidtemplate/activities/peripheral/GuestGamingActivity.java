@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -34,6 +35,7 @@ import java.util.Random;
 
 import de.andreasschrade.androidtemplate.R;
 import de.andreasschrade.androidtemplate.activities.base.BaseActivity;
+import de.andreasschrade.androidtemplate.backendless.Answer;
 import de.andreasschrade.androidtemplate.backendless.Session;
 import de.andreasschrade.androidtemplate.backendless.Tender;
 import de.andreasschrade.androidtemplate.backendless.Users;
@@ -62,6 +64,19 @@ public class GuestGamingActivity extends BaseActivity {
         setupToolbar();
         setTitle("");
 
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+        listView = (ListView) findViewById(R.id.list);
+
+        values = new ArrayList<String>();
+
+        adapter = new ArrayAdapter<String>(this,
+                R.layout.custom_textview, values);
+
+
+        // Assign adapter to ListView
+        listView.setAdapter(adapter);
+
 
 
         final ImageView img1 = (ImageView) findViewById(R.id.playerpic1);
@@ -86,6 +101,25 @@ public class GuestGamingActivity extends BaseActivity {
                 Log.i("info", "Round = " + session.getRound());
 
                 int counter = 0;
+
+                Answer[] answers = session.getAnswers();
+
+                Log.i("info", "ans =" + answers.length);
+
+                //Log.i("info", "answers = " + answers.toString());
+                for (Answer ans : answers) {
+
+
+                    Log.i("info", ans.getAnswer());
+
+
+                    values.add(ans.getAnswer());
+                    adapter.notifyDataSetChanged();
+
+
+                }
+
+
 
 
                 BackendlessUser[] players = session.getPlayers();
@@ -124,50 +158,6 @@ public class GuestGamingActivity extends BaseActivity {
 
 
 
-        /*final ImageView img = (ImageView) findViewById(R.id.playerpic1);
-        Glide.with(this).load("https://api.backendless.com/A0819152-C875-C222-FF18-0516AB9ACC00/v1/files/media/1072A8E44200.png").asBitmap().fitCenter().into(new BitmapImageViewTarget(img) {
-            @Override
-            protected void setResource(Bitmap resource) {
-
-                RoundedBitmapDrawable circularBitmapDrawable = RoundedBitmapDrawableFactory.create(getApplicationContext().getResources(), resource);
-                circularBitmapDrawable.setCircular(true);
-                img.setImageDrawable(circularBitmapDrawable);
-            }
-        });
-
-        final ImageView img2 = (ImageView) findViewById(R.id.playerpic2);
-        Glide.with(this).load("https://api.backendless.com/A0819152-C875-C222-FF18-0516AB9ACC00/v1/files/media/806D9415B500.png").asBitmap().fitCenter().into(new BitmapImageViewTarget(img2) {
-            @Override
-            protected void setResource(Bitmap resource) {
-
-                RoundedBitmapDrawable circularBitmapDrawable = RoundedBitmapDrawableFactory.create(getApplicationContext().getResources(), resource);
-                circularBitmapDrawable.setCircular(true);
-                img2.setImageDrawable(circularBitmapDrawable);
-            }
-        });
-
-        final ImageView img3 = (ImageView) findViewById(R.id.playerpic3);
-        Glide.with(this).load("https://api.backendless.com/A0819152-C875-C222-FF18-0516AB9ACC00/v1/files/media/D9C54F37AD00.png").asBitmap().fitCenter().into(new BitmapImageViewTarget(img3) {
-            @Override
-            protected void setResource(Bitmap resource) {
-
-                RoundedBitmapDrawable circularBitmapDrawable = RoundedBitmapDrawableFactory.create(getApplicationContext().getResources(), resource);
-                circularBitmapDrawable.setCircular(true);
-                img3.setImageDrawable(circularBitmapDrawable);
-            }
-        });
-
-        final ImageView img4 = (ImageView) findViewById(R.id.playerpic4);
-        Glide.with(this).load("https://api.backendless.com/A0819152-C875-C222-FF18-0516AB9ACC00/v1/files/media/F357AC7A6400.png").asBitmap().fitCenter().into(new BitmapImageViewTarget(img4) {
-            @Override
-            protected void setResource(Bitmap resource) {
-
-                RoundedBitmapDrawable circularBitmapDrawable = RoundedBitmapDrawableFactory.create(getApplicationContext().getResources(), resource);
-                circularBitmapDrawable.setCircular(true);
-                img4.setImageDrawable(circularBitmapDrawable);
-            }
-        });*/
-
 
         final FloatingActionButton mFloatingActionButton   = (FloatingActionButton)findViewById(R.id.fab8);
 
@@ -178,7 +168,39 @@ public class GuestGamingActivity extends BaseActivity {
                     Log.i("info", "clicked!!!!");
 
 
+                    Backendless.Persistence.of(Session.class).findById("207CBAA5-A0B5-72F9-FFE4-B52E9D3CB700", new AsyncCallback<Session>() {
+                        @Override
+                        public void handleResponse(Session session) {
 
+
+
+                            Answer[] answers = session.getAnswers();
+
+                            for (Answer ans : answers) {
+
+                                Backendless.Persistence.of( Answer.class ).remove(ans,
+                                        new AsyncCallback<Long>()
+                                        {
+                                            public void handleResponse( Long response )
+                                            {
+
+                                            }
+                                            public void handleFault( BackendlessFault fault )
+                                            {
+
+                                            }
+                                        } );
+
+                            }
+
+                        }
+
+                        @Override
+                        public void handleFault(BackendlessFault backendlessFault) {
+
+
+                        }
+                    });
 
 
 
@@ -191,23 +213,12 @@ public class GuestGamingActivity extends BaseActivity {
 
 
 
-        listView = (ListView) findViewById(R.id.list);
-
-        values = new ArrayList<String>();
-
-        values.add("Answer 1");
-        values.add("Answer 2");
-        values.add("Answer 3");
-        values.add("Answer 4");
 
 
 
-        adapter = new ArrayAdapter<String>(this,
-                R.layout.custom_textview, values);
 
 
-        // Assign adapter to ListView
-        listView.setAdapter(adapter);
+
 
         // ListView Item Click Listener
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
