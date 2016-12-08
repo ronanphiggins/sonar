@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.Menu;
@@ -27,9 +28,11 @@ import com.backendless.messaging.DeliveryOptions;
 import com.backendless.messaging.PublishOptions;
 import com.backendless.services.messaging.MessageStatus;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.disklrucache.DiskLruCache;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -67,6 +70,8 @@ public class GuestGamingActivity extends BaseActivity {
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         listView = (ListView) findViewById(R.id.list);
+
+        final SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
 
         values = new ArrayList<String>();
 
@@ -243,6 +248,62 @@ public class GuestGamingActivity extends BaseActivity {
             }
 
         });
+
+
+        swipeRefreshLayout.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+
+
+                        Backendless.Persistence.of(Session.class).findById("207CBAA5-A0B5-72F9-FFE4-B52E9D3CB700", new AsyncCallback<Session>() {
+                            @Override
+                            public void handleResponse(Session session) {
+
+                                Answer[] answers = session.getAnswers();
+
+                                for (Answer ans : answers) {
+
+                                    if (!values.contains(ans.getAnswer())) {
+
+                                        values.add(ans.getAnswer());
+                                        adapter.notifyDataSetChanged();
+
+
+                                    }
+
+
+
+
+                                }
+
+                                Toast.makeText(GuestGamingActivity.this, "refresh success",
+                                        Toast.LENGTH_LONG).show();
+
+                                swipeRefreshLayout.setRefreshing(false);
+
+
+
+                            }
+
+                            @Override
+                            public void handleFault(BackendlessFault backendlessFault) {
+
+                                Toast.makeText(GuestGamingActivity.this, "refresh failure",
+                                        Toast.LENGTH_LONG).show();
+
+                                swipeRefreshLayout.setRefreshing(false);
+
+
+
+                            }
+                        });
+
+
+
+                    }
+                }
+        );
 
 
 
