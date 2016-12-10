@@ -45,6 +45,8 @@ import de.andreasschrade.androidtemplate.backendless.Bid;
 import de.andreasschrade.androidtemplate.backendless.Session;
 import de.andreasschrade.androidtemplate.backendless.Tender;
 import de.andreasschrade.androidtemplate.backendless.Users;
+import de.andreasschrade.androidtemplate.utilities.AnswerAdapter;
+import de.andreasschrade.androidtemplate.utilities.AnswerTag;
 import de.andreasschrade.androidtemplate.utilities.StringUtil;
 
 /**
@@ -59,8 +61,11 @@ public class GuestGamingActivity extends BaseActivity {
     private boolean twoPaneMode;
 
     ListView listView;
-    List<String> values;
-    ArrayAdapter<String> adapter;
+    //List<String> values;
+    //ArrayAdapter<String> adapter;
+
+    List<Answer> values;
+    AnswerAdapter adapter;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -76,15 +81,20 @@ public class GuestGamingActivity extends BaseActivity {
 
         final SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
 
-        values = new ArrayList<String>();
+        /*values = new ArrayList<String>();
 
         adapter = new ArrayAdapter<String>(this,
                 R.layout.custom_textview, values);
 
 
         // Assign adapter to ListView
-        listView.setAdapter(adapter);
+        listView.setAdapter(adapter);*/
 
+        values = new ArrayList<Answer>();
+
+        adapter = new AnswerAdapter(this, R.layout.itemlistrow, values);
+
+        listView.setAdapter(adapter);
 
 
         final ImageView img1 = (ImageView) findViewById(R.id.playerpic1);
@@ -121,7 +131,8 @@ public class GuestGamingActivity extends BaseActivity {
                     Log.i("info", ans.getAnswer());
 
 
-                    values.add(ans.getAnswer());
+                    //values.add(ans.getAnswer());
+                    values.add(ans);
                     adapter.notifyDataSetChanged();
 
 
@@ -271,42 +282,6 @@ public class GuestGamingActivity extends BaseActivity {
                     });*/
 
 
-                    /*Backendless.Persistence.of(Session.class).findById("6E66FA4F-C624-FDD7-FFC6-714FCD3EE100", new AsyncCallback<Session>() {
-                        @Override
-                        public void handleResponse(Session session) {
-
-                            Log.i("info", "session = " + session.getRound());
-
-                            session.setRound("35");
-
-                            Backendless.Persistence.save( session, new AsyncCallback<Session>() {
-                                @Override
-                                public void handleResponse( Session response )
-                                {
-
-                                    Log.i("info", "update success");
-
-                                }
-                                @Override
-                                public void handleFault( BackendlessFault fault )
-                                {
-
-                                    Log.i("info", "update failed = " + fault.toString());
-
-                                }
-                            } );
-
-                        }
-
-                        @Override
-                        public void handleFault(BackendlessFault backendlessFault) {
-
-
-                        }
-                    });*/
-
-
-
                     return true;
                 }
                 return true; // consume the event
@@ -333,11 +308,13 @@ public class GuestGamingActivity extends BaseActivity {
                 int itemPosition     = position;
 
                 // ListView Clicked item value
-                String  itemValue    = (String) listView.getItemAtPosition(position);
+                Answer  itemValue    = (Answer) listView.getItemAtPosition(position);
+
+                AnswerTag thetag = (AnswerTag) view.getTag();
 
                 // Show Alert
                 Toast.makeText(getApplicationContext(),
-                        "Position :"+itemPosition+"  ListItem : " +itemValue , Toast.LENGTH_LONG)
+                        "Position :"+itemPosition+"  ListItem : " + thetag.returnId(), Toast.LENGTH_LONG)
                         .show();
 
                 mFloatingActionButton.setEnabled(true);
@@ -361,13 +338,22 @@ public class GuestGamingActivity extends BaseActivity {
 
                                 for (Answer ans : answers) {
 
-                                    if (!values.contains(ans.getAnswer())) {
+                                    /*if (!values.contains(ans)) {
 
-                                        values.add(ans.getAnswer());
+                                        values.add(ans);
                                         adapter.notifyDataSetChanged();
 
 
-                                    }
+                                    }*/
+
+                                    /*if (values.equals(ans)) {
+
+
+                                        values.add(ans);
+                                        adapter.notifyDataSetChanged();
+
+
+                                    }*/
 
 
 
