@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.backendless.Backendless;
+import com.backendless.BackendlessCollection;
 import com.backendless.BackendlessUser;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
@@ -34,11 +35,13 @@ import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import de.andreasschrade.androidtemplate.R;
 import de.andreasschrade.androidtemplate.activities.base.BaseActivity;
 import de.andreasschrade.androidtemplate.backendless.Answer;
+import de.andreasschrade.androidtemplate.backendless.Bid;
 import de.andreasschrade.androidtemplate.backendless.Session;
 import de.andreasschrade.androidtemplate.backendless.Tender;
 import de.andreasschrade.androidtemplate.backendless.Users;
@@ -60,7 +63,7 @@ public class GuestGamingActivity extends BaseActivity {
     ArrayAdapter<String> adapter;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gaming_guest);
 
@@ -91,7 +94,7 @@ public class GuestGamingActivity extends BaseActivity {
 
         final ImageView[] IMGS = {img1, img2, img3, img4};
 
-        Backendless.Persistence.of(Session.class).findById("207CBAA5-A0B5-72F9-FFE4-B52E9D3CB700", new AsyncCallback<Session>() {
+        Backendless.Persistence.of(Session.class).findById("6E66FA4F-C624-FDD7-FFC6-714FCD3EE100", new AsyncCallback<Session>() {
             @Override
             public void handleResponse(Session session) {
 
@@ -107,9 +110,9 @@ public class GuestGamingActivity extends BaseActivity {
 
                 int counter = 0;
 
-                Answer[] answers = session.getAnswers();
+                ArrayList<Answer> answers = session.getAnswers();
 
-                Log.i("info", "ans =" + answers.length);
+                //Log.i("info", "ans =" + answers.length);
 
                 //Log.i("info", "answers = " + answers.toString());
                 for (Answer ans : answers) {
@@ -173,7 +176,67 @@ public class GuestGamingActivity extends BaseActivity {
                     Log.i("info", "clicked!!!!");
 
 
-                    Backendless.Persistence.of(Session.class).findById("207CBAA5-A0B5-72F9-FFE4-B52E9D3CB700", new AsyncCallback<Session>() {
+                    Answer answer = new Answer();
+                    answer.setAnswer("programatic set answer");
+
+                    Backendless.Persistence.of(Answer.class).save(answer, new AsyncCallback<Answer>() {
+                        @Override
+                        public void handleResponse(final Answer answer) {
+
+
+                            Backendless.Persistence.of(Session.class).findById("6E66FA4F-C624-FDD7-FFC6-714FCD3EE100", new AsyncCallback<Session>() {
+                                @Override
+                                public void handleResponse(Session session) {
+
+                                    ArrayList<Answer> answers = session.getAnswers();
+
+                                    answers.add(answer);
+
+                                    session.setAnswers(answers);
+
+                                    //Answer[] answers = {answer};
+
+                                    //session.setAnswers(answers);
+
+
+
+                                    Backendless.Persistence.save( session, new AsyncCallback<Session>() {
+                                        @Override
+                                        public void handleResponse( Session response )
+                                        {
+
+                                            Log.i("info", "update success");
+
+                                        }
+                                        @Override
+                                        public void handleFault( BackendlessFault fault )
+                                        {
+
+                                            Log.i("info", "update failed = " + fault.toString());
+
+                                        }
+                                    } );
+
+                                }
+
+                                @Override
+                                public void handleFault(BackendlessFault backendlessFault) {
+
+
+                                }
+                            });
+
+
+
+                        }
+                        @Override
+                        public void handleFault(BackendlessFault backendlessFault) {
+
+                        }
+                    });
+
+
+                    /*Backendless.Persistence.of(Session.class).findById("207CBAA5-A0B5-72F9-FFE4-B52E9D3CB700", new AsyncCallback<Session>() {
                         @Override
                         public void handleResponse(Session session) {
 
@@ -205,8 +268,42 @@ public class GuestGamingActivity extends BaseActivity {
 
 
                         }
-                    });
+                    });*/
 
+
+                    /*Backendless.Persistence.of(Session.class).findById("6E66FA4F-C624-FDD7-FFC6-714FCD3EE100", new AsyncCallback<Session>() {
+                        @Override
+                        public void handleResponse(Session session) {
+
+                            Log.i("info", "session = " + session.getRound());
+
+                            session.setRound("35");
+
+                            Backendless.Persistence.save( session, new AsyncCallback<Session>() {
+                                @Override
+                                public void handleResponse( Session response )
+                                {
+
+                                    Log.i("info", "update success");
+
+                                }
+                                @Override
+                                public void handleFault( BackendlessFault fault )
+                                {
+
+                                    Log.i("info", "update failed = " + fault.toString());
+
+                                }
+                            } );
+
+                        }
+
+                        @Override
+                        public void handleFault(BackendlessFault backendlessFault) {
+
+
+                        }
+                    });*/
 
 
 
@@ -256,11 +353,11 @@ public class GuestGamingActivity extends BaseActivity {
                     public void onRefresh() {
 
 
-                        Backendless.Persistence.of(Session.class).findById("207CBAA5-A0B5-72F9-FFE4-B52E9D3CB700", new AsyncCallback<Session>() {
+                        Backendless.Persistence.of(Session.class).findById("6E66FA4F-C624-FDD7-FFC6-714FCD3EE100", new AsyncCallback<Session>() {
                             @Override
                             public void handleResponse(Session session) {
 
-                                Answer[] answers = session.getAnswers();
+                                ArrayList<Answer> answers = session.getAnswers();
 
                                 for (Answer ans : answers) {
 
