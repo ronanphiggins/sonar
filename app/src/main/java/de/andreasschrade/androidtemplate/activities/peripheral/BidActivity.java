@@ -72,7 +72,7 @@ public class BidActivity extends BaseActivity implements BidListFragment.Callbac
                                 i.putExtra("deviceId", deviceRegistration.getDeviceId());
                                 startActivity(i);*/
 
-                                Intent i = new Intent(BidActivity.this, GuestGamingActivity.class);
+                                Intent i = new Intent(BidActivity.this, InitiatorGamingActivity.class);
                                 i.putExtra("deviceId", deviceRegistration.getDeviceId());
                                 startActivity(i);
 

@@ -336,25 +336,24 @@ public class GuestGamingActivity extends BaseActivity {
 
                                 ArrayList<Answer> answers = session.getAnswers();
 
+                                ArrayList<String> objectId = new ArrayList<String>();
+
+                                for (Answer value : values) {
+
+                                    objectId.add(value.getObjectId());
+
+                                }
+
                                 for (Answer ans : answers) {
 
-                                    /*if (!values.contains(ans)) {
-
-                                        values.add(ans);
-                                        adapter.notifyDataSetChanged();
-
-
-                                    }*/
-
-                                    /*if (values.equals(ans)) {
+                                    if (!objectId.contains(ans.getObjectId())) {
 
 
                                         values.add(ans);
                                         adapter.notifyDataSetChanged();
 
 
-                                    }*/
-
+                                    }
 
 
 

@@ -166,6 +166,7 @@ public class LoginActivity extends AppCompatActivity {
                                     public void handleResponse(DeviceRegistration deviceRegistration) {
 
                                         user.setProperty("deviceId", deviceRegistration.getDeviceId());
+
                                         Backendless.UserService.update(user, new AsyncCallback<BackendlessUser>() {
                                             @Override
                                             public void handleResponse(BackendlessUser backendlessUser) {

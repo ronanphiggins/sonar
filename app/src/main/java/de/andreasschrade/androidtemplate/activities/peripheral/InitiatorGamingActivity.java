@@ -2,16 +2,20 @@ package de.andreasschrade.androidtemplate.activities.peripheral;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -20,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.backendless.Backendless;
+import com.backendless.BackendlessUser;
 import com.backendless.DeviceRegistration;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
@@ -32,7 +37,12 @@ import java.util.Random;
 
 import de.andreasschrade.androidtemplate.R;
 import de.andreasschrade.androidtemplate.activities.base.BaseActivity;
+import de.andreasschrade.androidtemplate.backendless.Answer;
+import de.andreasschrade.androidtemplate.backendless.Session;
+import de.andreasschrade.androidtemplate.utilities.AnswerAdapter;
+import de.andreasschrade.androidtemplate.utilities.AnswerTag;
 import de.andreasschrade.androidtemplate.utilities.LogUtil;
+import de.andreasschrade.androidtemplate.utilities.StringUtil;
 import de.andreasschrade.androidtemplate.wrapper.BidderContent;
 
 /**
@@ -41,75 +51,157 @@ import de.andreasschrade.androidtemplate.wrapper.BidderContent;
  * Created by Andreas Schrade on 14.12.2015.
  */
 public class InitiatorGamingActivity extends BaseActivity {
-    /**
-     * Whether or not the activity is running on a device with a large screen
-     */
+
+
     private boolean twoPaneMode;
 
+
+    private boolean generateQuestion = false;
+
     ListView listView;
-    List<String> values;
-    ArrayAdapter<String> adapter;
+    //List<String> values;
+    //ArrayAdapter<String> adapter;
+
+    List<Answer> values;
+    AnswerAdapter adapter;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gamingshell);
 
         setupToolbar();
         setTitle("");
 
-        final String[] questions = new String[] {"What is your favourite colour?", "What is your favourite animal?", "What is your favourite season?", "What is your favourite drink?"};
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+        listView = (ListView) findViewById(R.id.list);
+
+        final FloatingActionButton mFloatingActionButton   = (FloatingActionButton)findViewById(R.id.fab8);
+
+        final SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
+
+        /*values = new ArrayList<String>();
+
+        adapter = new ArrayAdapter<String>(this,
+                R.layout.custom_textview, values);
+
+
+        // Assign adapter to ListView
+        listView.setAdapter(adapter);*/
+
+        values = new ArrayList<Answer>();
+
+        adapter = new AnswerAdapter(this, R.layout.itemlistrow, values);
+
+        listView.setAdapter(adapter);
+
+        final String[] questions = {"What is your favourite Season?", "What is your favourite movie?", "What is your favourite food?"};
 
         final TextView question = (TextView) findViewById(R.id.thequestion);
 
-        final ImageView img = (ImageView) findViewById(R.id.playerpic1);
-        Glide.with(this).load("https://api.backendless.com/A0819152-C875-C222-FF18-0516AB9ACC00/v1/files/media/1072A8E44200.png").asBitmap().fitCenter().into(new BitmapImageViewTarget(img) {
-            @Override
-            protected void setResource(Bitmap resource) {
 
-                RoundedBitmapDrawable circularBitmapDrawable = RoundedBitmapDrawableFactory.create(getApplicationContext().getResources(), resource);
-                circularBitmapDrawable.setCircular(true);
-                img.setImageDrawable(circularBitmapDrawable);
-            }
-        });
-
+        final ImageView img1 = (ImageView) findViewById(R.id.playerpic1);
         final ImageView img2 = (ImageView) findViewById(R.id.playerpic2);
-        Glide.with(this).load("https://api.backendless.com/A0819152-C875-C222-FF18-0516AB9ACC00/v1/files/media/806D9415B500.png").asBitmap().fitCenter().into(new BitmapImageViewTarget(img2) {
-            @Override
-            protected void setResource(Bitmap resource) {
-
-                RoundedBitmapDrawable circularBitmapDrawable = RoundedBitmapDrawableFactory.create(getApplicationContext().getResources(), resource);
-                circularBitmapDrawable.setCircular(true);
-                img2.setImageDrawable(circularBitmapDrawable);
-            }
-        });
-
         final ImageView img3 = (ImageView) findViewById(R.id.playerpic3);
-        Glide.with(this).load("https://api.backendless.com/A0819152-C875-C222-FF18-0516AB9ACC00/v1/files/media/D9C54F37AD00.png").asBitmap().fitCenter().into(new BitmapImageViewTarget(img3) {
-            @Override
-            protected void setResource(Bitmap resource) {
-
-                RoundedBitmapDrawable circularBitmapDrawable = RoundedBitmapDrawableFactory.create(getApplicationContext().getResources(), resource);
-                circularBitmapDrawable.setCircular(true);
-                img3.setImageDrawable(circularBitmapDrawable);
-            }
-        });
-
         final ImageView img4 = (ImageView) findViewById(R.id.playerpic4);
-        Glide.with(this).load("https://api.backendless.com/A0819152-C875-C222-FF18-0516AB9ACC00/v1/files/media/F357AC7A6400.png").asBitmap().fitCenter().into(new BitmapImageViewTarget(img4) {
-            @Override
-            protected void setResource(Bitmap resource) {
 
-                RoundedBitmapDrawable circularBitmapDrawable = RoundedBitmapDrawableFactory.create(getApplicationContext().getResources(), resource);
-                circularBitmapDrawable.setCircular(true);
-                img4.setImageDrawable(circularBitmapDrawable);
+        final ImageView[] IMGS = {img1, img2, img3, img4};
+
+        Backendless.Persistence.of(Session.class).findById("6E66FA4F-C624-FDD7-FFC6-714FCD3EE100", new AsyncCallback<Session>() {
+            @Override
+            public void handleResponse(Session session) {
+
+
+                if (session.getQuestion() == null) {
+
+                    Log.i("info", "question is emtpy");
+
+                    generateQuestion = true;
+
+
+                } else {
+
+                    generateQuestion = false;
+                    question.setText(session.getQuestion());
+
+                }
+
+                mFloatingActionButton.setEnabled(generateQuestion);
+
+
+
+
+                //TextView textView = (TextView) findViewById(R.id.textView2);
+
+                //textView.setText(session.getRound());
+
+                setTitle("Round" + " " + session.getRound());
+
+
+                Log.i("info", "Round = " + session.getRound());
+
+                int counter = 0;
+
+                ArrayList<Answer> answers = session.getAnswers();
+
+                //Log.i("info", "ans =" + answers.length);
+
+                //Log.i("info", "answers = " + answers.toString());
+                for (Answer ans : answers) {
+
+
+                    Log.i("info", ans.getAnswer());
+
+
+                    //values.add(ans.getAnswer());
+                    values.add(ans);
+                    adapter.notifyDataSetChanged();
+
+
+                }
+
+
+
+
+                BackendlessUser[] players = session.getPlayers();
+                for (BackendlessUser user : players) {
+
+                    //Log.i("info", "userid = " + user.getProperty("objectId"));
+
+                    final String url = StringUtil.splitString(user.getProperty("objectId").toString());
+
+                    Log.i("info", url);
+
+                    Log.i("info", IMGS[counter].toString());
+
+                    final ImageView theimage = IMGS[counter];
+                    Glide.with(InitiatorGamingActivity.this).load("https://api.backendless.com/A0819152-C875-C222-FF18-0516AB9ACC00/v1/files/media/" + url + ".png").asBitmap().fitCenter().into(new BitmapImageViewTarget(theimage) {
+                        @Override
+                        protected void setResource(Bitmap resource) {
+
+                            RoundedBitmapDrawable circularBitmapDrawable = RoundedBitmapDrawableFactory.create(getApplicationContext().getResources(), resource);
+                            circularBitmapDrawable.setCircular(true);
+                            theimage.setImageDrawable(circularBitmapDrawable);
+                        }
+                    });
+
+                    counter ++;
+
+                }
+            }
+
+            @Override
+            public void handleFault(BackendlessFault backendlessFault) {
+
+
             }
         });
 
 
 
 
-        final FloatingActionButton mFloatingActionButton   = (FloatingActionButton)findViewById(R.id.fab8);
+
 
         mFloatingActionButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -117,13 +209,116 @@ public class InitiatorGamingActivity extends BaseActivity {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
                     Log.i("info", "clicked!!!!");
 
+
+                    /*Random rnd = new Random();
+                     int rndIndex = rnd.nextInt(questions.length);
+                     final String theQuestion = questions[rndIndex];  
+
+                    question.setText(theQuestion);*/
+
                     Random rnd = new Random();
                     int rndIndex = rnd.nextInt(questions.length);
                     final String theQuestion = questions[rndIndex];
 
                     question.setText(theQuestion);
 
-                    mFloatingActionButton.setEnabled(false);
+                    Backendless.Persistence.of(Session.class).findById("6E66FA4F-C624-FDD7-FFC6-714FCD3EE100", new AsyncCallback<Session>() {
+                        @Override
+                        public void handleResponse(Session session) {
+
+                            session.setQuestion(theQuestion);
+
+                            Backendless.Persistence.save( session, new AsyncCallback<Session>() {
+                                @Override
+                                public void handleResponse( Session response )
+                                {
+
+                                    generateQuestion = false;
+                                    mFloatingActionButton.setEnabled(generateQuestion);
+
+                                    Log.i("info", "update success");
+
+                                }
+                                @Override
+                                public void handleFault( BackendlessFault fault )
+                                {
+
+                                    Log.i("info", "update failed = " + fault.toString());
+
+                                }
+                            } );
+
+                        }
+
+                        @Override
+                        public void handleFault(BackendlessFault backendlessFault) {
+
+
+                        }
+                    });
+
+
+                    /*Answer answer = new Answer();
+                    answer.setAnswer("programatic set answer");
+
+
+
+                    Backendless.Persistence.of(Answer.class).save(answer, new AsyncCallback<Answer>() {
+                        @Override
+                        public void handleResponse(final Answer answer) {
+
+
+                            Backendless.Persistence.of(Session.class).findById("6E66FA4F-C624-FDD7-FFC6-714FCD3EE100", new AsyncCallback<Session>() {
+                                @Override
+                                public void handleResponse(Session session) {
+
+                                    ArrayList<Answer> answers = session.getAnswers();
+
+                                    answers.add(answer);
+
+                                    session.setAnswers(answers);
+
+                                    //Answer[] answers = {answer};
+
+                                    //session.setAnswers(answers);
+
+
+
+                                    Backendless.Persistence.save( session, new AsyncCallback<Session>() {
+                                        @Override
+                                        public void handleResponse( Session response )
+                                        {
+
+                                            Log.i("info", "update success");
+
+                                        }
+                                        @Override
+                                        public void handleFault( BackendlessFault fault )
+                                        {
+
+                                            Log.i("info", "update failed = " + fault.toString());
+
+                                        }
+                                    } );
+
+                                }
+
+                                @Override
+                                public void handleFault(BackendlessFault backendlessFault) {
+
+
+                                }
+                            });
+
+
+
+                        }
+                        @Override
+                        public void handleFault(BackendlessFault backendlessFault) {
+
+                        }
+                    });*/
+
 
 
 
@@ -136,23 +331,12 @@ public class InitiatorGamingActivity extends BaseActivity {
 
 
 
-        listView = (ListView) findViewById(R.id.list);
-
-        values = new ArrayList<String>();
-
-        values.add("Answer 1");
-        values.add("Answer 2");
-        values.add("Answer 3");
-        values.add("Answer 4");
 
 
 
-        adapter = new ArrayAdapter<String>(this,
-                R.layout.custom_textview, values);
 
 
-        // Assign adapter to ListView
-        listView.setAdapter(adapter);
+
 
         // ListView Item Click Listener
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -165,11 +349,13 @@ public class InitiatorGamingActivity extends BaseActivity {
                 int itemPosition     = position;
 
                 // ListView Clicked item value
-                String  itemValue    = (String) listView.getItemAtPosition(position);
+                Answer  itemValue    = (Answer) listView.getItemAtPosition(position);
+
+                AnswerTag thetag = (AnswerTag) view.getTag();
 
                 // Show Alert
                 Toast.makeText(getApplicationContext(),
-                        "Position :"+itemPosition+"  ListItem : " +itemValue , Toast.LENGTH_LONG)
+                        "Position :"+itemPosition+"  ListItem : " + thetag.returnId(), Toast.LENGTH_LONG)
                         .show();
 
                 mFloatingActionButton.setEnabled(true);
@@ -177,6 +363,70 @@ public class InitiatorGamingActivity extends BaseActivity {
             }
 
         });
+
+
+        swipeRefreshLayout.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+
+
+                        Backendless.Persistence.of(Session.class).findById("6E66FA4F-C624-FDD7-FFC6-714FCD3EE100", new AsyncCallback<Session>() {
+                            @Override
+                            public void handleResponse(Session session) {
+
+                                ArrayList<Answer> answers = session.getAnswers();
+
+                                ArrayList<String> objectId = new ArrayList<String>();
+
+                                for (Answer value : values) {
+
+                                    objectId.add(value.getObjectId());
+
+                                }
+
+                                for (Answer ans : answers) {
+
+                                    if (!objectId.contains(ans.getObjectId())) {
+
+
+                                        values.add(ans);
+                                        adapter.notifyDataSetChanged();
+
+
+                                    }
+
+
+
+                                }
+
+                                Toast.makeText(InitiatorGamingActivity.this, "refresh success",
+                                        Toast.LENGTH_LONG).show();
+
+                                swipeRefreshLayout.setRefreshing(false);
+
+
+
+                            }
+
+                            @Override
+                            public void handleFault(BackendlessFault backendlessFault) {
+
+                                Toast.makeText(InitiatorGamingActivity.this, "refresh failure",
+                                        Toast.LENGTH_LONG).show();
+
+                                swipeRefreshLayout.setRefreshing(false);
+
+
+
+                            }
+                        });
+
+
+
+                    }
+                }
+        );
 
 
 
@@ -219,4 +469,9 @@ public class InitiatorGamingActivity extends BaseActivity {
     public boolean providesActivityToolbar() {
         return true;
     }
+
+
+
+
+
 }
