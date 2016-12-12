@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -187,8 +188,13 @@ public class GuestGamingActivity extends BaseActivity {
                     Log.i("info", "clicked!!!!");
 
 
+                    EditText theAnswer = (EditText) findViewById(R.id.answerText);
+
+                    String answerText = theAnswer.getText().toString();
+
+
                     Answer answer = new Answer();
-                    answer.setAnswer("programatic set answer");
+                    answer.setAnswer(answerText);
 
                     Backendless.Persistence.of(Answer.class).save(answer, new AsyncCallback<Answer>() {
                         @Override
