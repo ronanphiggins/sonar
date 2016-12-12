@@ -11,6 +11,11 @@
             android:icon="@drawable/profile"
             android:title="Bids" />
 
+        <item
+            android:id="@+id/nav_game"
+            android:icon="@drawable/profile"
+            android:title="Game" />
+
 
     </group>
 

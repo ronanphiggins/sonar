@@ -28,6 +28,7 @@ import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
 import com.backendless.messaging.DeliveryOptions;
 import com.backendless.messaging.PublishOptions;
+import com.backendless.persistence.local.UserIdStorageFactory;
 import com.backendless.services.messaging.MessageStatus;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.disklrucache.DiskLruCache;
@@ -60,6 +61,10 @@ public class GuestGamingActivity extends BaseActivity {
      * Whether or not the activity is running on a device with a large screen
      */
     private boolean twoPaneMode;
+
+
+    final ArrayList<String> players = new ArrayList<>();
+
 
     ListView listView;
     //List<String> values;
@@ -110,12 +115,24 @@ public class GuestGamingActivity extends BaseActivity {
             public void handleResponse(Session session) {
 
 
-                //TextView textView = (TextView) findViewById(R.id.textView2);
 
-                //textView.setText(session.getRound());
+                BackendlessUser[] sessionplayers = session.getPlayers();
+
+                for (BackendlessUser player : sessionplayers) {
+
+                    if (!player.getObjectId().equalsIgnoreCase(UserIdStorageFactory.instance().getStorage().get())) {
+
+
+                        players.add((String) player.getProperty("deviceId"));
+
+
+                    }
+                }
+
+                Log.i("info", "other players =" + players);
+
 
                 setTitle("Round" + " " + session.getRound());
-
 
                 Log.i("info", "Round = " + session.getRound());
 
@@ -123,9 +140,6 @@ public class GuestGamingActivity extends BaseActivity {
 
                 ArrayList<Answer> answers = session.getAnswers();
 
-                //Log.i("info", "ans =" + answers.length);
-
-                //Log.i("info", "answers = " + answers.toString());
                 for (Answer ans : answers) {
 
 

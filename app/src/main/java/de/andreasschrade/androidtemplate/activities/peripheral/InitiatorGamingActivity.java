@@ -28,6 +28,7 @@ import com.backendless.BackendlessUser;
 import com.backendless.DeviceRegistration;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
+import com.backendless.persistence.local.UserIdStorageFactory;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 
@@ -54,6 +55,8 @@ public class InitiatorGamingActivity extends BaseActivity {
 
 
     private boolean twoPaneMode;
+
+    final ArrayList<String> players = new ArrayList<>();
 
 
     private boolean generateQuestion = false;
@@ -128,6 +131,23 @@ public class InitiatorGamingActivity extends BaseActivity {
                 }
 
                 mFloatingActionButton.setEnabled(generateQuestion);
+
+
+
+                BackendlessUser[] sessionplayers = session.getPlayers();
+
+                for (BackendlessUser player : sessionplayers) {
+
+                    if (!player.getObjectId().equalsIgnoreCase(UserIdStorageFactory.instance().getStorage().get())) {
+
+
+                        players.add((String) player.getProperty("deviceId"));
+
+
+                    }
+                }
+
+                Log.i("info", "other players =" + players);
 
 
 

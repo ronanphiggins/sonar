@@ -17,10 +17,12 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.backendless.Backendless;
 import com.backendless.BackendlessCollection;
 import com.backendless.BackendlessUser;
+import com.backendless.DeviceRegistration;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
 import com.backendless.persistence.BackendlessDataQuery;
@@ -31,15 +33,22 @@ import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import org.joda.time.LocalDate;
 import org.joda.time.Years;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Objects;
 
 import de.andreasschrade.androidtemplate.R;
 import de.andreasschrade.androidtemplate.activities.core.SettingsActivity;
+import de.andreasschrade.androidtemplate.activities.peripheral.GuestGamingActivity;
 import de.andreasschrade.androidtemplate.activities.peripheral.HomeActivity;
 import de.andreasschrade.androidtemplate.activities.peripheral.BidActivity;
 import de.andreasschrade.androidtemplate.activities.core.LoginActivity;
+import de.andreasschrade.androidtemplate.activities.peripheral.InitiatorGamingActivity;
+import de.andreasschrade.androidtemplate.backendless.Answer;
 import de.andreasschrade.androidtemplate.backendless.Bid;
+import de.andreasschrade.androidtemplate.backendless.Session;
 import de.andreasschrade.androidtemplate.utilities.CustomDialogClass;
 import de.andreasschrade.androidtemplate.utilities.SaveSharedPreference;
 import de.andreasschrade.androidtemplate.utilities.StringUtil;
@@ -332,6 +341,59 @@ public abstract class BaseActivity extends AppCompatActivity {
                     //finish();
 
                     break;
+
+                    case R.id.nav_game:
+
+
+                        Backendless.Messaging.getDeviceRegistration(new AsyncCallback<DeviceRegistration>() {
+                            @Override
+                            public void handleResponse(DeviceRegistration deviceRegistration) {
+
+
+                                if (deviceRegistration.getDeviceId().equalsIgnoreCase("04157df43901b531")) {
+
+                                /*Intent i = new Intent(BidActivity.this, HostGamingActivity.class);
+                                i.putExtra("deviceId", deviceRegistration.getDeviceId());
+                                startActivity(i);*/
+
+                                Intent i = new Intent(BaseActivity.this, InitiatorGamingActivity.class);
+                                i.putExtra("deviceId", deviceRegistration.getDeviceId());
+                                startActivity(i);
+
+                            } else {
+
+                                /*Intent i = new Intent(BidActivity.this, PlayerGamingActivity.class);
+                                i.putExtra("deviceId", deviceRegistration.getDeviceId());
+                                startActivity(i);*/
+
+                                Intent i = new Intent(BaseActivity.this, GuestGamingActivity.class);
+                                i.putExtra("deviceId", deviceRegistration.getDeviceId());
+                                startActivity(i);
+
+
+                            }
+
+
+                        }
+
+                        @Override
+                        public void handleFault(BackendlessFault backendlessFault) {
+
+                        }
+
+                    });
+
+
+
+
+
+
+
+
+
+
+                    break;
+
                     case R.id.nav_logout:
                     final CustomDialogClass cdd = new CustomDialogClass(BaseActivity.this);
                     cdd.progressDialog("Signing off..");

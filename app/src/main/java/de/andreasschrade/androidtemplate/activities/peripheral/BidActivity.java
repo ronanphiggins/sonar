@@ -61,18 +61,18 @@ public class BidActivity extends BaseActivity implements BidListFragment.Callbac
                     Log.i("info", "clicked!!!!");
 
 
-                    Backendless.Messaging.getDeviceRegistration(new AsyncCallback<DeviceRegistration>() {
+                    /*Backendless.Messaging.getDeviceRegistration(new AsyncCallback<DeviceRegistration>() {
                         @Override
                         public void handleResponse(DeviceRegistration deviceRegistration) {
 
 
-                            if (deviceRegistration.getDeviceId().equalsIgnoreCase("04157df43901b531")) {
+                            if (deviceRegistration.getDeviceId().equalsIgnoreCase("04157df43901b531")) {*/
 
                                 /*Intent i = new Intent(BidActivity.this, HostGamingActivity.class);
                                 i.putExtra("deviceId", deviceRegistration.getDeviceId());
                                 startActivity(i);*/
 
-                                Intent i = new Intent(BidActivity.this, InitiatorGamingActivity.class);
+                                /*(Intent i = new Intent(BidActivity.this, InitiatorGamingActivity.class);
                                 i.putExtra("deviceId", deviceRegistration.getDeviceId());
                                 startActivity(i);
 
@@ -82,9 +82,10 @@ public class BidActivity extends BaseActivity implements BidListFragment.Callbac
                                 i.putExtra("deviceId", deviceRegistration.getDeviceId());
                                 startActivity(i);*/
 
-                                Intent i = new Intent(BidActivity.this, GuestGamingActivity.class);
+                                /*Intent i = new Intent(BidActivity.this, GuestGamingActivity.class);
                                 i.putExtra("deviceId", deviceRegistration.getDeviceId());
                                 startActivity(i);
+
 
                             }
 
