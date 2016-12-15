@@ -1,5 +1,6 @@
 package de.andreasschrade.androidtemplate.activities.peripheral;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -14,8 +15,10 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
@@ -110,7 +113,10 @@ public class HomeActivity extends BaseActivity implements OnMapReadyCallback, Cl
 
     private ClusterManager<Person> mClusterManager;
 
+    final private int REQUEST_CODE_ASK_PERMISSIONS = 123;
 
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -120,6 +126,47 @@ public class HomeActivity extends BaseActivity implements OnMapReadyCallback, Cl
         setupToolbar();
 
         //final List<String> hasBidded = new ArrayList<String>();
+
+
+        int hasFineLocationPermission = checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
+        int hasCoarseLocationPermission = checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION);
+        if (hasFineLocationPermission != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[] {Manifest.permission.ACCESS_FINE_LOCATION},
+                    REQUEST_CODE_ASK_PERMISSIONS);
+
+            return;
+        }
+
+        afterPermissionCheck();
+
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                                           int[] grantResults) {
+
+        if (requestCode == REQUEST_CODE_ASK_PERMISSIONS) {
+
+            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                afterPermissionCheck();
+
+
+            } else {
+
+
+                Toast.makeText(HomeActivity.this, "Location permission denied",
+                        Toast.LENGTH_LONG).show();
+
+
+            }
+        }
+
+    }
+
+
+    protected void afterPermissionCheck() {
 
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -253,6 +300,11 @@ public class HomeActivity extends BaseActivity implements OnMapReadyCallback, Cl
                 // an error has occurred, the error code can be retrieved with fault.getCode()
             }
         });
+
+
+
+
+
 
     }
 
