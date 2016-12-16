@@ -61,6 +61,8 @@ public class InitiatorGamingActivity extends BaseActivity {
 
     private boolean twoPaneMode;
 
+    private static InitiatorGamingActivity instwo;
+
     final ArrayList<String> players = new ArrayList<>();
 
 
@@ -73,6 +75,7 @@ public class InitiatorGamingActivity extends BaseActivity {
     List<Answer> values;
     AnswerAdapter adapter;
 
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,6 +83,8 @@ public class InitiatorGamingActivity extends BaseActivity {
 
         setupToolbar();
         setTitle("");
+
+        instwo = this;
 
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
@@ -104,7 +109,7 @@ public class InitiatorGamingActivity extends BaseActivity {
 
         listView.setAdapter(adapter);
 
-        final String[] questions = {"What is your favourite Season?", "What is your favourite movie?", "What is your favourite food?"};
+        final String[] questions = {"\"What is your favourite Season?\"", "\"What is your favourite movie?\"", "\"What is your favourite food?\""};
 
         final TextView question = (TextView) findViewById(R.id.thequestion);
 
@@ -235,28 +240,6 @@ public class InitiatorGamingActivity extends BaseActivity {
                     Log.i("info", "clicked!!!!");
 
 
-                    android.util.Pair<DeliveryOptions, PublishOptions> pair = SendBroadcastMethods.PrepareBroadcast(players, "questiontrigger", "this is the test message");
-
-
-                    Backendless.Messaging.publish("", pair.second, pair.first, new AsyncCallback<MessageStatus>() {
-                        @Override
-                        public void handleResponse(MessageStatus response) {
-
-                            Log.i("info", "message sent");
-
-
-
-                        }
-
-                        @Override
-                        public void handleFault(BackendlessFault backendlessFault) {
-
-
-                            Log.i("info", backendlessFault.toString());
-
-
-                        }
-                    });
 
 
                     /*Random rnd = new Random();
@@ -270,11 +253,11 @@ public class InitiatorGamingActivity extends BaseActivity {
 
                     //Uncomment after message test
 
-                    /*Random rnd = new Random();
+                    Random rnd = new Random();
                     int rndIndex = rnd.nextInt(questions.length);
                     final String theQuestion = questions[rndIndex];
 
-                    question.setText(theQuestion);
+
 
                     Backendless.Persistence.of(Session.class).findById("6E66FA4F-C624-FDD7-FFC6-714FCD3EE100", new AsyncCallback<Session>() {
                         @Override
@@ -289,6 +272,30 @@ public class InitiatorGamingActivity extends BaseActivity {
 
                                     generateQuestion = false;
                                     mFloatingActionButton.setEnabled(generateQuestion);
+                                    question.setText(theQuestion);
+
+                                    android.util.Pair<DeliveryOptions, PublishOptions> pair = SendBroadcastMethods.PrepareBroadcast(players, "questiontrigger", theQuestion);
+
+
+                                    Backendless.Messaging.publish("", pair.second, pair.first, new AsyncCallback<MessageStatus>() {
+                                        @Override
+                                        public void handleResponse(MessageStatus response) {
+
+                                            Log.i("info", "message sent");
+
+
+
+                                        }
+
+                                        @Override
+                                        public void handleFault(BackendlessFault backendlessFault) {
+
+
+                                            Log.i("info", backendlessFault.toString());
+
+
+                                        }
+                                    });
 
                                     Log.i("info", "update success");
 
@@ -309,7 +316,7 @@ public class InitiatorGamingActivity extends BaseActivity {
 
 
                         }
-                    });*/
+                    });
 
 
                     //////////////////////////////////////////////////////
@@ -487,6 +494,22 @@ public class InitiatorGamingActivity extends BaseActivity {
 
 
 
+
+
+    }
+
+    public static InitiatorGamingActivity  getInstance(){
+        return instwo;
+    }
+
+
+    public void UpdateTheInitiatorAnswer(final String leAnswer) {
+
+
+        Log.i("info", "Update answer");
+
+        Toast.makeText(InitiatorGamingActivity.this, leAnswer,
+                Toast.LENGTH_LONG).show();
 
 
     }

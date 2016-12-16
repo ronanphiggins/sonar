@@ -48,6 +48,7 @@ import de.andreasschrade.androidtemplate.R;
 import de.andreasschrade.androidtemplate.activities.base.BaseActivity;
 import de.andreasschrade.androidtemplate.backendless.Answer;
 import de.andreasschrade.androidtemplate.backendless.Bid;
+import de.andreasschrade.androidtemplate.backendless.SendBroadcastMethods;
 import de.andreasschrade.androidtemplate.backendless.Session;
 import de.andreasschrade.androidtemplate.backendless.Tender;
 import de.andreasschrade.androidtemplate.backendless.Users;
@@ -105,7 +106,7 @@ public class GuestGamingActivity extends BaseActivity {
         setupToolbar();
         setTitle("");
 
-        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        //this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         listView = (ListView) findViewById(R.id.list);
 
@@ -145,12 +146,14 @@ public class GuestGamingActivity extends BaseActivity {
 
                     Log.i("info", "question is emtpy");
 
+                    Snackbar.make(v, "Waiting for question...", Snackbar.LENGTH_INDEFINITE).show();
+
 
 
 
                 } else {
 
-
+                    Snackbar.make(v, session.getQuestion(), Snackbar.LENGTH_INDEFINITE).show();
 
                 }
 
@@ -244,7 +247,7 @@ public class GuestGamingActivity extends BaseActivity {
 
                     EditText theAnswer = (EditText) findViewById(R.id.answerText);
 
-                    String answerText = theAnswer.getText().toString();
+                    final String answerText = theAnswer.getText().toString();
 
 
                     Answer answer = new Answer();
@@ -277,6 +280,35 @@ public class GuestGamingActivity extends BaseActivity {
                                         {
 
                                             Log.i("info", "update success");
+
+                                            android.util.Pair<DeliveryOptions, PublishOptions> pair = SendBroadcastMethods.PrepareBroadcast(players, "answertrigger", answerText);
+
+
+                                            Backendless.Messaging.publish("", pair.second, pair.first, new AsyncCallback<MessageStatus>() {
+                                                @Override
+                                                public void handleResponse(MessageStatus response) {
+
+                                                    Log.i("info", "message sent");
+
+
+
+                                                }
+
+                                                @Override
+                                                public void handleFault(BackendlessFault backendlessFault) {
+
+
+                                                    Log.i("info", backendlessFault.toString());
+
+
+                                                }
+                                            });
+
+
+
+
+
+
 
                                         }
                                         @Override
@@ -462,6 +494,16 @@ public class GuestGamingActivity extends BaseActivity {
 
 
         Snackbar.make(v, question, Snackbar.LENGTH_INDEFINITE).show();
+
+    }
+
+    public void UpdateTheAnswer(final String answer) {
+
+
+        Toast.makeText(GuestGamingActivity.this, answer,
+                Toast.LENGTH_LONG).show();
+
+
 
     }
 
