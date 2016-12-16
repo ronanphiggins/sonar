@@ -50,6 +50,7 @@ public class PlayerGamingActivity extends AppCompatActivity {
                 DeliveryOptions deliveryOptions = new DeliveryOptions();
                 deliveryOptions.addPushSinglecast("04157df43901b531");
 
+
                 PublishOptions publishOptions = new PublishOptions();
                 publishOptions.putHeader("android-ticker-text", "answer");
                 publishOptions.putHeader("android-content-title", answer.getText().toString());

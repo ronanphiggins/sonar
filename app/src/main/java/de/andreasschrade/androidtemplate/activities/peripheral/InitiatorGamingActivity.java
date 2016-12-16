@@ -8,6 +8,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
+import android.support.v4.util.Pair;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.util.Log;
@@ -28,7 +29,10 @@ import com.backendless.BackendlessUser;
 import com.backendless.DeviceRegistration;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
+import com.backendless.messaging.DeliveryOptions;
+import com.backendless.messaging.PublishOptions;
 import com.backendless.persistence.local.UserIdStorageFactory;
+import com.backendless.services.messaging.MessageStatus;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 
@@ -39,6 +43,7 @@ import java.util.Random;
 import de.andreasschrade.androidtemplate.R;
 import de.andreasschrade.androidtemplate.activities.base.BaseActivity;
 import de.andreasschrade.androidtemplate.backendless.Answer;
+import de.andreasschrade.androidtemplate.backendless.SendBroadcastMethods;
 import de.andreasschrade.androidtemplate.backendless.Session;
 import de.andreasschrade.androidtemplate.utilities.AnswerAdapter;
 import de.andreasschrade.androidtemplate.utilities.AnswerTag;
@@ -230,13 +235,42 @@ public class InitiatorGamingActivity extends BaseActivity {
                     Log.i("info", "clicked!!!!");
 
 
+                    android.util.Pair<DeliveryOptions, PublishOptions> pair = SendBroadcastMethods.PrepareBroadcast(players, "questiontrigger", "this is the test message");
+
+
+                    Backendless.Messaging.publish("", pair.second, pair.first, new AsyncCallback<MessageStatus>() {
+                        @Override
+                        public void handleResponse(MessageStatus response) {
+
+                            Log.i("info", "message sent");
+
+
+
+                        }
+
+                        @Override
+                        public void handleFault(BackendlessFault backendlessFault) {
+
+
+                            Log.i("info", backendlessFault.toString());
+
+
+                        }
+                    });
+
+
                     /*Random rnd = new Random();
                      int rndIndex = rnd.nextInt(questions.length);
                      final String theQuestion = questions[rndIndex];  
 
                     question.setText(theQuestion);*/
 
-                    Random rnd = new Random();
+
+                    //////////////////////////////////////////////////////
+
+                    //Uncomment after message test
+
+                    /*Random rnd = new Random();
                     int rndIndex = rnd.nextInt(questions.length);
                     final String theQuestion = questions[rndIndex];
 
@@ -275,7 +309,10 @@ public class InitiatorGamingActivity extends BaseActivity {
 
 
                         }
-                    });
+                    });*/
+
+
+                    //////////////////////////////////////////////////////
 
 
                     /*Answer answer = new Answer();

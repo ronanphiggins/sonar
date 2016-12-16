@@ -13,6 +13,7 @@ import com.backendless.push.BackendlessBroadcastReceiver;
 
 import de.andreasschrade.androidtemplate.R;
 import de.andreasschrade.androidtemplate.activities.peripheral.BidActivity;
+import de.andreasschrade.androidtemplate.activities.peripheral.GuestGamingActivity;
 import de.andreasschrade.androidtemplate.activities.peripheral.HostGamingActivity;
 import de.andreasschrade.androidtemplate.activities.peripheral.PlayerGamingActivity;
 
@@ -170,6 +171,25 @@ public class PushReceiver extends BackendlessBroadcastReceiver {
 
                 }
 
+
+            } else if (trigger.equalsIgnoreCase("questiontrigger")) {
+
+
+                try {
+
+                    String question = intent.getStringExtra("android-content-title");
+
+                    GuestGamingActivity.getInstance().UpdateTheQuestion(question);
+
+                    Log.i("info", "try");
+
+                } catch (Exception e) {
+
+
+                    Log.i("info", "catch" + e);
+
+
+                }
 
             }
 

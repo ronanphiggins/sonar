@@ -145,7 +145,7 @@ public class GuestGamingActivity extends BaseActivity {
 
                     Log.i("info", "question is emtpy");
 
-                    
+
 
 
                 } else {

@@ -127,17 +127,31 @@ public class HomeActivity extends BaseActivity implements OnMapReadyCallback, Cl
 
         //final List<String> hasBidded = new ArrayList<String>();
 
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
 
-        int hasFineLocationPermission = checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
-        int hasCoarseLocationPermission = checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION);
-        if (hasFineLocationPermission != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[] {Manifest.permission.ACCESS_FINE_LOCATION},
-                    REQUEST_CODE_ASK_PERMISSIONS);
+            afterPermissionCheck();
 
-            return;
+        } else {
+
+
+
+            int hasFineLocationPermission = checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
+            int hasCoarseLocationPermission = checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION);
+            if (hasFineLocationPermission != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[] {Manifest.permission.ACCESS_FINE_LOCATION},
+                        REQUEST_CODE_ASK_PERMISSIONS);
+
+                return;
+            }
+
+            afterPermissionCheck();
+
+
+
         }
 
-        afterPermissionCheck();
+
+
 
 
     }
