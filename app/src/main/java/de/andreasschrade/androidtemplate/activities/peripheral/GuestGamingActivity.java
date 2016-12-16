@@ -1,8 +1,10 @@
 package de.andreasschrade.androidtemplate.activities.peripheral;
 
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -12,12 +14,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -62,8 +66,12 @@ public class GuestGamingActivity extends BaseActivity {
      */
     private boolean twoPaneMode;
 
+    private static GuestGamingActivity ins;
+
 
     final ArrayList<String> players = new ArrayList<>();
+
+
 
 
     ListView listView;
@@ -73,10 +81,26 @@ public class GuestGamingActivity extends BaseActivity {
     List<Answer> values;
     AnswerAdapter adapter;
 
+    View v;
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_gaming_guest);
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+
+            setContentView(R.layout.activity_gaming_guest_huwai);
+
+        } else {
+
+            setContentView(R.layout.activity_gaming_guest);
+
+        }
+
+
+        v = getWindow().getDecorView().getRootView();
+
+        ins = this;
 
         setupToolbar();
         setTitle("");
@@ -84,6 +108,8 @@ public class GuestGamingActivity extends BaseActivity {
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         listView = (ListView) findViewById(R.id.list);
+
+
 
         final SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
 
@@ -113,6 +139,20 @@ public class GuestGamingActivity extends BaseActivity {
         Backendless.Persistence.of(Session.class).findById("6E66FA4F-C624-FDD7-FFC6-714FCD3EE100", new AsyncCallback<Session>() {
             @Override
             public void handleResponse(Session session) {
+
+
+                if (session.getQuestion() == null) {
+
+                    Log.i("info", "question is emtpy");
+
+                    
+
+
+                } else {
+
+
+
+                }
 
 
 
@@ -410,6 +450,18 @@ public class GuestGamingActivity extends BaseActivity {
 
 
 
+
+    }
+
+    public static GuestGamingActivity  getInstance(){
+        return ins;
+    }
+
+
+    public void UpdateTheQuestion(final String question) {
+
+
+        Snackbar.make(v, question, Snackbar.LENGTH_INDEFINITE).show();
 
     }
 
