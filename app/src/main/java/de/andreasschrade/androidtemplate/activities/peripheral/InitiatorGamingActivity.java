@@ -42,12 +42,14 @@ import java.util.Random;
 
 import de.andreasschrade.androidtemplate.R;
 import de.andreasschrade.androidtemplate.activities.base.BaseActivity;
+import de.andreasschrade.androidtemplate.activities.core.LoginActivity;
 import de.andreasschrade.androidtemplate.backendless.Answer;
 import de.andreasschrade.androidtemplate.backendless.SendBroadcastMethods;
 import de.andreasschrade.androidtemplate.backendless.Session;
 import de.andreasschrade.androidtemplate.utilities.AnswerAdapter;
 import de.andreasschrade.androidtemplate.utilities.AnswerTag;
 import de.andreasschrade.androidtemplate.utilities.LogUtil;
+import de.andreasschrade.androidtemplate.utilities.SaveSharedPreference;
 import de.andreasschrade.androidtemplate.utilities.StringUtil;
 import de.andreasschrade.androidtemplate.wrapper.BidderContent;
 
@@ -274,7 +276,7 @@ public class InitiatorGamingActivity extends BaseActivity {
                                     mFloatingActionButton.setEnabled(generateQuestion);
                                     question.setText(theQuestion);
 
-                                    android.util.Pair<DeliveryOptions, PublishOptions> pair = SendBroadcastMethods.PrepareBroadcast(players, "questiontrigger", theQuestion);
+                                    android.util.Pair<DeliveryOptions, PublishOptions> pair = SendBroadcastMethods.PrepareBroadcast(players, "questiontrigger", theQuestion, "null");
 
 
                                     Backendless.Messaging.publish("", pair.second, pair.first, new AsyncCallback<MessageStatus>() {
@@ -410,19 +412,189 @@ public class InitiatorGamingActivity extends BaseActivity {
                                     int position, long id) {
 
                 // ListView Clicked item index
-                int itemPosition     = position;
+                //int itemPosition     = position;
 
                 // ListView Clicked item value
-                Answer  itemValue    = (Answer) listView.getItemAtPosition(position);
+                //Answer  itemValue    = (Answer) listView.getItemAtPosition(position);
 
                 AnswerTag thetag = (AnswerTag) view.getTag();
 
                 // Show Alert
-                Toast.makeText(getApplicationContext(),
-                        "Position :"+itemPosition+"  ListItem : " + thetag.returnId(), Toast.LENGTH_LONG)
-                        .show();
+                //Toast.makeText(getApplicationContext(),
+                //        "Position :"+itemPosition+"  ListItem : " + thetag.returnId(), Toast.LENGTH_LONG)
+                //        .show();
 
-                mFloatingActionButton.setEnabled(true);
+                //mFloatingActionButton.setEnabled(true);
+
+                Backendless.Persistence.of(Answer.class).findById(thetag.returnId(), new AsyncCallback<Answer>() {
+                    @Override
+                    public void handleResponse(Answer answer) {
+
+                        String owner = answer.getOwnerId();
+
+
+                        Log.i("info", "OwnerId = " + owner);
+
+                        Backendless.UserService.findById(owner, new AsyncCallback<BackendlessUser>() {
+                            @Override
+                            public void handleResponse(final BackendlessUser backendlessUsertwo) {
+
+
+
+                                Backendless.Persistence.of(Session.class).findById("6E66FA4F-C624-FDD7-FFC6-714FCD3EE100", new AsyncCallback<Session>() {
+                                    @Override
+                                    public void handleResponse(Session session) {
+
+                                        //session.setRound_one_winner(backendlessUsertwo);
+                                        session.setRound("2");
+                                        session.setQuestion(null);
+
+
+
+
+                                        Backendless.Persistence.save( session, new AsyncCallback<Session>() {
+                                            @Override
+                                            public void handleResponse( final Session responseone )
+                                            {
+
+
+                                                String winnerId = backendlessUsertwo.getProperty("deviceId").toString();
+
+                                                ArrayList<String> winner = new ArrayList<String>();
+
+                                                winner.add(winnerId);
+
+                                                android.util.Pair<DeliveryOptions, PublishOptions> pair = SendBroadcastMethods.PrepareBroadcast(winner, "winnertrigger", "null", "null");
+
+
+                                                Backendless.Messaging.publish("", pair.second, pair.first, new AsyncCallback<MessageStatus>() {
+                                                    @Override
+                                                    public void handleResponse(MessageStatus response) {
+
+                                                        Log.i("info", "message sent");
+
+
+                                                        ArrayList<Answer> answers = responseone.getAnswers();
+
+                                                        for (Answer ans : answers) {
+
+                                                            Backendless.Persistence.of( Answer.class ).remove(ans,
+                                                                    new AsyncCallback<Long>()
+                                                                    {
+                                                                        public void handleResponse( Long response )
+                                                                        {
+
+                                                                        }
+                                                                        public void handleFault( BackendlessFault fault )
+                                                                        {
+
+                                                                        }
+                                                                    } );
+
+                                                        }
+
+
+
+                                                    }
+
+                                                    @Override
+                                                    public void handleFault(BackendlessFault backendlessFault) {
+
+
+                                                        Log.i("info", backendlessFault.toString());
+
+
+                                                    }
+                                                });
+
+
+
+                                                Log.i("info", "session update success ");
+
+
+
+
+                                            }
+                                            @Override
+                                            public void handleFault( BackendlessFault fault )
+                                            {
+
+                                                Log.i("info", "update failed = " + fault.toString());
+
+                                            }
+                                        } );
+
+                                    }
+
+                                    @Override
+                                    public void handleFault(BackendlessFault backendlessFault) {
+
+
+                                    }
+                                });
+
+
+
+
+
+
+
+
+                                /*Log.i("info", "deviceId = " + backendlessUser.getProperty("deviceId").toString());
+
+                                String winnerId = backendlessUser.getProperty("deviceId").toString();
+
+                                ArrayList<String> winner = new ArrayList<String>();
+
+                                winner.add(winnerId);
+
+                                android.util.Pair<DeliveryOptions, PublishOptions> pair = SendBroadcastMethods.PrepareBroadcast(winner, "winnertrigger", "null", "null");
+
+
+                                Backendless.Messaging.publish("", pair.second, pair.first, new AsyncCallback<MessageStatus>() {
+                                    @Override
+                                    public void handleResponse(MessageStatus response) {
+
+                                        Log.i("info", "message sent");
+
+
+
+                                    }
+
+                                    @Override
+                                    public void handleFault(BackendlessFault backendlessFault) {
+
+
+                                        Log.i("info", backendlessFault.toString());
+
+
+                                    }
+                                });*/
+
+
+
+                            }
+
+                            @Override
+                            public void handleFault(BackendlessFault backendlessFault) {
+
+                            }
+                        });
+
+
+
+
+
+
+
+                    }
+
+                    @Override
+                    public void handleFault(BackendlessFault backendlessFault) {
+
+
+                    }
+                });
 
             }
 
@@ -503,13 +675,16 @@ public class InitiatorGamingActivity extends BaseActivity {
     }
 
 
-    public void UpdateTheInitiatorAnswer(final String leAnswer) {
+    public void UpdateTheInitiatorAnswer(final Answer answer) {
 
 
         Log.i("info", "Update answer");
 
-        Toast.makeText(InitiatorGamingActivity.this, leAnswer,
-                Toast.LENGTH_LONG).show();
+        //Toast.makeText(InitiatorGamingActivity.this, leAnswer,
+        //        Toast.LENGTH_LONG).show();
+
+        values.add(answer);
+        adapter.notifyDataSetChanged();
 
 
     }

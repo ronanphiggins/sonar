@@ -18,6 +18,10 @@ public class Session {
 
     private ArrayList<Answer> answers;
 
+    private BackendlessUser round_one_winner;
+
+    private BackendlessUser round_two_winner;
+
 
     public Session()
     {
@@ -63,6 +67,11 @@ public class Session {
 
 
     public void setQuestion(String question) {this.question = question; }
+
+    public void setRound_one_winner(BackendlessUser round_one_winner) {this.round_one_winner = round_one_winner; }
+
+    public void setRound_two_winner(BackendlessUser round_two_winner) {this.round_two_winner = round_two_winner; }
+
 
 
 

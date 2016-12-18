@@ -92,6 +92,7 @@
                     android:inputType="textPersonName"
                     android:hint="Answer"
                     android:ems="10"
+                    android:maxLength="20"
                     android:id="@+id/answerText"
                     android:layout_weight="1" />
 
@@ -113,7 +114,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/regular_offset"
                     app:backgroundTint="@color/theme_primary_dark"
-                    android:background="@drawable/plus"
+                    android:src="@drawable/plus"
                     android:clickable="true"
                     app:elevation="0dp" />
 

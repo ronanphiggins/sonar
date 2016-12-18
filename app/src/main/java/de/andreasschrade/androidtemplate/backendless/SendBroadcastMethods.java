@@ -20,7 +20,7 @@ import de.andreasschrade.androidtemplate.R;
 public class SendBroadcastMethods {
 
 
-    public static Pair<DeliveryOptions, PublishOptions> PrepareBroadcast(ArrayList<String> deviceId, String trigger, String question) {
+    public static Pair<DeliveryOptions, PublishOptions> PrepareBroadcast(ArrayList<String> deviceId, String trigger, String question, String answerId) {
 
 
         DeliveryOptions deliveryOptions = new DeliveryOptions();
@@ -34,7 +34,7 @@ public class SendBroadcastMethods {
         PublishOptions publishOptions = new PublishOptions();
         publishOptions.putHeader("android-ticker-text", trigger);
         publishOptions.putHeader("android-content-title", question);
-        publishOptions.putHeader("android-content-text", "");
+        publishOptions.putHeader("android-content-text", answerId);
 
         return Pair.create(deliveryOptions, publishOptions);
     }

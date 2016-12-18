@@ -1,6 +1,7 @@
 package de.andreasschrade.androidtemplate.activities.peripheral;
 
 import android.graphics.Bitmap;
+import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -250,6 +251,7 @@ public class GuestGamingActivity extends BaseActivity {
                     final String answerText = theAnswer.getText().toString();
 
 
+
                     Answer answer = new Answer();
                     answer.setAnswer(answerText);
 
@@ -257,8 +259,10 @@ public class GuestGamingActivity extends BaseActivity {
                         @Override
                         public void handleResponse(final Answer answer) {
 
+                            final String answerId = answer.getObjectId();
 
-                            Backendless.Persistence.of(Session.class).findById("6E66FA4F-C624-FDD7-FFC6-714FCD3EE100", new AsyncCallback<Session>() {
+
+                                    Backendless.Persistence.of(Session.class).findById("6E66FA4F-C624-FDD7-FFC6-714FCD3EE100", new AsyncCallback<Session>() {
                                 @Override
                                 public void handleResponse(Session session) {
 
@@ -279,9 +283,12 @@ public class GuestGamingActivity extends BaseActivity {
                                         public void handleResponse( Session response )
                                         {
 
+                                            values.add(answer);
+                                            adapter.notifyDataSetChanged();
+
                                             Log.i("info", "update success");
 
-                                            android.util.Pair<DeliveryOptions, PublishOptions> pair = SendBroadcastMethods.PrepareBroadcast(players, "answertrigger", answerText);
+                                            android.util.Pair<DeliveryOptions, PublishOptions> pair = SendBroadcastMethods.PrepareBroadcast(players, "answertrigger", answerText, answerId);
 
 
                                             Backendless.Messaging.publish("", pair.second, pair.first, new AsyncCallback<MessageStatus>() {
@@ -390,7 +397,8 @@ public class GuestGamingActivity extends BaseActivity {
 
 
         // ListView Item Click Listener
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        // Guest cannot click on list.
+        /*listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
@@ -413,7 +421,7 @@ public class GuestGamingActivity extends BaseActivity {
 
             }
 
-        });
+        });*/
 
 
         swipeRefreshLayout.setOnRefreshListener(
@@ -495,15 +503,29 @@ public class GuestGamingActivity extends BaseActivity {
 
         Snackbar.make(v, question, Snackbar.LENGTH_INDEFINITE).show();
 
+        final MediaPlayer mp = MediaPlayer.create(this, R.raw.iphonesound);
+        mp.start();
+
     }
 
-    public void UpdateTheAnswer(final String answer) {
+    public void UpdateTheAnswer(final Answer answer) {
 
 
-        Toast.makeText(GuestGamingActivity.this, answer,
+        //Toast.makeText(GuestGamingActivity.this, answer,
+        //Toast.LENGTH_LONG).show();
+
+        values.add(answer);
+        adapter.notifyDataSetChanged();
+
+
+
+
+    }
+
+    public void DeclareWinner() {
+
+        Toast.makeText(GuestGamingActivity.this, "Congrats you have Won the date!!!!",
                 Toast.LENGTH_LONG).show();
-
-
 
     }
 

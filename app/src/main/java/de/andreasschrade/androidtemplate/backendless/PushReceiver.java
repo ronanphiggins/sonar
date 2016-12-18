@@ -196,6 +196,14 @@ public class PushReceiver extends BackendlessBroadcastReceiver {
 
 
                 String theanswer = intent.getStringExtra("android-content-title");
+                String theobjectId = intent.getStringExtra("android-content-text");
+
+                Answer answerobject = new Answer();
+
+                answerobject.setAnswer(theanswer);
+                answerobject.setObjectId(theobjectId);
+
+
 
 
                 try {
@@ -203,7 +211,7 @@ public class PushReceiver extends BackendlessBroadcastReceiver {
 
 
 
-                    InitiatorGamingActivity.getInstance().UpdateTheInitiatorAnswer(theanswer);
+                    InitiatorGamingActivity.getInstance().UpdateTheInitiatorAnswer(answerobject);
 
 
 
@@ -219,11 +227,28 @@ public class PushReceiver extends BackendlessBroadcastReceiver {
                 } try {
 
 
-                    GuestGamingActivity.getInstance().UpdateTheAnswer(theanswer);
+                    GuestGamingActivity.getInstance().UpdateTheAnswer(answerobject);
 
 
 
                 } catch (Exception e) {
+
+                }
+
+            } else if (trigger.equalsIgnoreCase("winnertrigger")) {
+
+
+                try {
+
+                    GuestGamingActivity.getInstance().DeclareWinner();
+
+                    Log.i("info", "try");
+
+                } catch (Exception e) {
+
+
+                    Log.i("info", "catch" + e);
+
 
                 }
 
