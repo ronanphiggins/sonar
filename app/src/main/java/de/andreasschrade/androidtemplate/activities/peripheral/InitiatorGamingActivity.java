@@ -442,6 +442,7 @@ public class InitiatorGamingActivity extends BaseActivity {
 
 
                                 Backendless.Persistence.of(Session.class).findById("6E66FA4F-C624-FDD7-FFC6-714FCD3EE100", new AsyncCallback<Session>() {
+
                                     @Override
                                     public void handleResponse(Session session) {
 

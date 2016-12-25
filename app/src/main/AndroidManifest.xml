@@ -60,9 +60,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".activities.core.RegisterActivity"
-            android:screenOrientation="portrait" />
         <activity android:name="com.soundcloud.android.crop.CropImageActivity" />
 
         <receiver
@@ -89,6 +86,10 @@
             android:name=".activities.peripheral.GuestGamingActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan"/>
+
+        <activity
+            android:name=".activities.core.RegisterActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>
