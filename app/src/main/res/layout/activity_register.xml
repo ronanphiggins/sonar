@@ -13,8 +13,41 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="40dp"
-        android:orientation="vertical"
-        android:layout_marginTop="20dp">
+        android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+        <EditText
+            android:layout_marginBottom="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/my_button_bg"
+            android:textColorHint="@color/theme_primary_dark"
+            android:backgroundTint="@android:color/transparent"
+            android:backgroundTintMode="@android:color/transparent"
+            android:padding="15dp"
+            android:ems="10"
+            android:inputType="textNoSuggestions"
+            android:id="@+id/username"
+            android:textColor="@color/theme_primary_dark"
+            android:cursorVisible="true"
+            android:hint="Username" />
+        <ProgressBar
+            style="?android:attr/progressBarStyle"
+            android:id="@+id/checkusernameprogress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/username"
+            android:paddingRight="10dp"
+            android:visibility="invisible"
+            android:layout_alignBottom="@id/username"
+            android:layout_alignRight="@id/username"/>
+
+    </RelativeLayout>
+
+
 
     <EditText
         android:layout_marginBottom="20dp"
@@ -24,13 +57,13 @@
         android:textColorHint="@color/theme_primary_dark"
         android:backgroundTint="@android:color/transparent"
         android:backgroundTintMode="@android:color/transparent"
-        android:padding="20dp"
+        android:padding="15dp"
         android:ems="10"
         android:inputType="textNoSuggestions"
-        android:id="@+id/username"
+        android:id="@+id/firstname"
         android:textColor="@color/theme_primary_dark"
         android:cursorVisible="true"
-        android:hint="Username" />
+        android:hint="First Name" />
 
     <EditText
         android:layout_marginBottom="20dp"
@@ -40,8 +73,9 @@
         android:textColorHint="@color/theme_primary_dark"
         android:backgroundTint="@android:color/transparent"
         android:backgroundTintMode="@android:color/transparent"
-        android:padding="20dp"
+        android:padding="15dp"
         android:ems="10"
+        android:focusable="false"
         android:inputType="textNoSuggestions"
         android:id="@+id/gender"
         android:textColor="@color/theme_primary_dark"
@@ -56,7 +90,7 @@
         android:textColorHint="@color/theme_primary_dark"
         android:backgroundTint="@android:color/transparent"
         android:backgroundTintMode="@android:color/transparent"
-        android:padding="20dp"
+        android:padding="15dp"
         android:focusable="false"
         android:ems="10"
         android:inputType="textNoSuggestions"
@@ -73,7 +107,7 @@
         android:textColorHint="@color/theme_primary_dark"
         android:backgroundTint="@android:color/transparent"
         android:backgroundTintMode="@android:color/transparent"
-        android:padding="20dp"
+        android:padding="15dp"
         android:ems="10"
         android:inputType="textPassword"
         android:id="@+id/password"
@@ -82,14 +116,13 @@
         android:hint="Password" />
 
     <EditText
-        android:layout_marginBottom="20dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/my_button_bg"
         android:textColorHint="@color/theme_primary_dark"
         android:backgroundTint="@android:color/transparent"
         android:backgroundTintMode="@android:color/transparent"
-        android:padding="20dp"
+        android:padding="15dp"
         android:ems="10"
         android:inputType="textPassword"
         android:id="@+id/confirmpassword"
