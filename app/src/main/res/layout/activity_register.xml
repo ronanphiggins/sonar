@@ -143,7 +143,7 @@
             android:layout_height="match_parent"
             android:id="@+id/signup"
             android:text="Sign Up!"
-            android:background="@color/theme_primary_light"
+            android:background="@color/theme_primary_dark"
             android:textColor="#FFFFFF"/>
 
     </LinearLayout>

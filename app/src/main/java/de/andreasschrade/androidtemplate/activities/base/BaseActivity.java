@@ -28,7 +28,10 @@ import com.backendless.exceptions.BackendlessFault;
 import com.backendless.persistence.BackendlessDataQuery;
 import com.backendless.persistence.local.UserIdStorageFactory;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.bumptech.glide.request.target.Target;
 
 import org.joda.time.LocalDate;
 import org.joda.time.Years;
@@ -152,7 +155,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         //NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         View hView =  navigationView.getHeaderView(0);
         final ImageView img = (ImageView)hView.findViewById(R.id.navbarpic);
-        Glide.with(this).load(finalurl).asBitmap().fitCenter().into(new BitmapImageViewTarget(img) {
+        Glide.with(this).load(finalurl).asBitmap().fitCenter().placeholder(R.drawable.placeholder).into(new BitmapImageViewTarget(img) {
             @Override
             protected void setResource(Bitmap resource) {
 
@@ -161,6 +164,8 @@ public abstract class BaseActivity extends AppCompatActivity {
                 img.setImageDrawable(circularBitmapDrawable);
             }
         });
+
+
 
         logD(TAG, "navigation drawer setup finished");
 
