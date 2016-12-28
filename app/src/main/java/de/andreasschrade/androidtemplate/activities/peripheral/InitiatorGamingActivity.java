@@ -35,6 +35,7 @@ import com.backendless.persistence.local.UserIdStorageFactory;
 import com.backendless.services.messaging.MessageStatus;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.nhaarman.listviewanimations.appearance.simple.SwingRightInAnimationAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -109,9 +110,12 @@ public class InitiatorGamingActivity extends BaseActivity {
 
         adapter = new AnswerAdapter(this, R.layout.itemlistrow, values);
 
-        listView.setAdapter(adapter);
+        SwingRightInAnimationAdapter animationAdapter = new SwingRightInAnimationAdapter(adapter);
+        animationAdapter.setAbsListView(listView);
 
-        final String[] questions = {"\"What is your favourite Season?\"", "\"What is your favourite movie?\"", "\"What is your favourite food?\""};
+        listView.setAdapter(animationAdapter);
+
+        final String[] questions = {"\"What makes your pussy wet?\"", "\"How many inches can you deepthroat?\"", "\"Do you like it deep in your asshole?\""};
 
         final TextView question = (TextView) findViewById(R.id.thequestion);
 
@@ -138,6 +142,7 @@ public class InitiatorGamingActivity extends BaseActivity {
                 } else {
 
                     generateQuestion = false;
+                    mFloatingActionButton.setVisibility(View.INVISIBLE);
                     question.setText(session.getQuestion());
 
                 }
@@ -274,6 +279,7 @@ public class InitiatorGamingActivity extends BaseActivity {
 
                                     generateQuestion = false;
                                     mFloatingActionButton.setEnabled(generateQuestion);
+                                    mFloatingActionButton.setVisibility(View.INVISIBLE);
                                     question.setText(theQuestion);
 
                                     android.util.Pair<DeliveryOptions, PublishOptions> pair = SendBroadcastMethods.PrepareBroadcast(players, "questiontrigger", theQuestion, "null");

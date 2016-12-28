@@ -38,6 +38,8 @@ import com.backendless.services.messaging.MessageStatus;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.disklrucache.DiskLruCache;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter;
+import com.nhaarman.listviewanimations.appearance.simple.SwingRightInAnimationAdapter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -70,6 +72,9 @@ public class GuestGamingActivity extends BaseActivity {
 
     private static GuestGamingActivity ins;
 
+    private boolean hasnotAnswered = false;
+
+    EditText answeredittext;
 
     final ArrayList<String> players = new ArrayList<>();
 
@@ -82,6 +87,9 @@ public class GuestGamingActivity extends BaseActivity {
 
     List<Answer> values;
     AnswerAdapter adapter;
+
+    FloatingActionButton mFloatingActionButton;
+
 
     View v;
 
@@ -107,6 +115,9 @@ public class GuestGamingActivity extends BaseActivity {
         setupToolbar();
         setTitle("");
 
+        mFloatingActionButton = (FloatingActionButton)findViewById(R.id.fab8);
+        answeredittext = (EditText) findViewById(R.id.answerText);
+
         //this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         listView = (ListView) findViewById(R.id.list);
@@ -128,7 +139,10 @@ public class GuestGamingActivity extends BaseActivity {
 
         adapter = new AnswerAdapter(this, R.layout.itemlistrow, values);
 
-        listView.setAdapter(adapter);
+        SwingRightInAnimationAdapter animationAdapter = new SwingRightInAnimationAdapter(adapter);
+        animationAdapter.setAbsListView(listView);
+
+        listView.setAdapter(animationAdapter);
 
 
         final ImageView img1 = (ImageView) findViewById(R.id.playerpic1);
@@ -184,8 +198,20 @@ public class GuestGamingActivity extends BaseActivity {
 
                 ArrayList<Answer> answers = session.getAnswers();
 
+                hasnotAnswered = true;
+
                 for (Answer ans : answers) {
 
+
+                    if (ans.getOwnerId().equalsIgnoreCase(UserIdStorageFactory.instance().getStorage().get())) {
+
+                        Log.i("info", "user has answered already");
+
+                        hasnotAnswered = false;
+                        mFloatingActionButton.setVisibility(View.INVISIBLE);
+                        answeredittext.setVisibility(View.INVISIBLE);
+
+                    }
 
                     Log.i("info", ans.getAnswer());
 
@@ -196,6 +222,10 @@ public class GuestGamingActivity extends BaseActivity {
 
 
                 }
+
+
+
+                mFloatingActionButton.setEnabled(hasnotAnswered);
 
 
 
@@ -237,7 +267,7 @@ public class GuestGamingActivity extends BaseActivity {
 
 
 
-        final FloatingActionButton mFloatingActionButton   = (FloatingActionButton)findViewById(R.id.fab8);
+
 
         mFloatingActionButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -287,6 +317,15 @@ public class GuestGamingActivity extends BaseActivity {
                                             adapter.notifyDataSetChanged();
 
                                             Log.i("info", "update success");
+
+
+                                            hasnotAnswered = false;
+
+                                            mFloatingActionButton.setEnabled(hasnotAnswered);
+
+                                            mFloatingActionButton.setVisibility(View.INVISIBLE);
+
+                                            answeredittext.setVisibility(View.INVISIBLE);
 
                                             android.util.Pair<DeliveryOptions, PublishOptions> pair = SendBroadcastMethods.PrepareBroadcast(players, "answertrigger", answerText, answerId);
 
