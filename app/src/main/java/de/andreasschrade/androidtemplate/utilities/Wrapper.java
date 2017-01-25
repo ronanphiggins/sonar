@@ -12,4 +12,6 @@ public class Wrapper {
     public static String tenderId;
     public static Activity fa;
 
+    public static int answercounterint = 1;
+
 }

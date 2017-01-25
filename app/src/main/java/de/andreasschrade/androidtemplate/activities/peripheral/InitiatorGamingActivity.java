@@ -52,6 +52,7 @@ import de.andreasschrade.androidtemplate.utilities.AnswerTag;
 import de.andreasschrade.androidtemplate.utilities.LogUtil;
 import de.andreasschrade.androidtemplate.utilities.SaveSharedPreference;
 import de.andreasschrade.androidtemplate.utilities.StringUtil;
+import de.andreasschrade.androidtemplate.utilities.Wrapper;
 import de.andreasschrade.androidtemplate.wrapper.BidderContent;
 
 /**
@@ -429,6 +430,8 @@ public class InitiatorGamingActivity extends BaseActivity {
 
                 AnswerTag thetag = (AnswerTag) view.getTag();
 
+                Wrapper.answercounterint = 1;
+
                 // Show Alert
                 //Toast.makeText(getApplicationContext(),
                 //        "Position :"+itemPosition+"  ListItem : " + thetag.returnId(), Toast.LENGTH_LONG)
@@ -438,7 +441,7 @@ public class InitiatorGamingActivity extends BaseActivity {
 
                 Backendless.Persistence.of(Answer.class).findById(thetag.returnId(), new AsyncCallback<Answer>() {
                     @Override
-                    public void handleResponse(Answer answer) {
+                    public void handleResponse(final Answer answer) {
 
                         String owner = answer.getOwnerId();
 
@@ -457,28 +460,29 @@ public class InitiatorGamingActivity extends BaseActivity {
                                     public void handleResponse(Session session) {
 
                                         //session.setRound_one_winner(backendlessUsertwo);
-                                        ArrayList<BackendlessUser> winners = session.getRoundonewinner();
-
-                                        winners.add(backendlessUsertwo);
-
-                                        for (BackendlessUser winner : winners) {
-
-                                            Log.i("info", "winner relation test: " + winner.getUserId());
-                                        }
 
 
 
                                         if (roundNumber.equalsIgnoreCase("1")) {
 
-                                            session.setRoundonewinner(winners);
+                                            ArrayList<BackendlessUser> winnerroundone = session.getRoundonewinner();
+                                            winnerroundone.add(backendlessUsertwo);
+
+                                            session.setRoundonewinner(winnerroundone);
                                             session.setRound("2");
                                             roundNumber = "2";
 
                                         } else if (roundNumber.equalsIgnoreCase("2")) {
 
-                                            session.setRoundtwowinner(winners);
+                                            ArrayList<BackendlessUser> winnersroundtwo = session.getRoundtwowinner();
+
+                                            winnersroundtwo.add(backendlessUsertwo);
+
+                                            session.setRoundtwowinner(winnersroundtwo);
                                             session.setRound("3");
                                             roundNumber = "3";
+
+
                                         }
 
                                         session.setQuestion(null);
@@ -492,43 +496,28 @@ public class InitiatorGamingActivity extends BaseActivity {
                                             {
 
 
-                                                String winnerId = backendlessUsertwo.getProperty("deviceId").toString();
-
-                                                ArrayList<String> winner = new ArrayList<String>();
-
-                                                android.util.Pair<DeliveryOptions, PublishOptions> pair;
-
-                                                if (roundNumber.equalsIgnoreCase("4")) {
-
-                                                    winner.add(winnerId);
-                                                    pair = SendBroadcastMethods.PrepareBroadcast(winner, "finalwinnertrigger", "null", "null");
-
-                                                } else {
-
-
-                                                    pair = SendBroadcastMethods.PrepareBroadcast(players, "winnertrigger", "null", "null");
-
-                                                }
-
-
-
-
-
                                                 //values.clear();
                                                 //adapter.notifyDataSetChanged();
                                                 //setTitle(roundNumber);
 
-
-                                                Backendless.Messaging.publish("", pair.second, pair.first, new AsyncCallback<MessageStatus>() {
-                                                    @Override
-                                                    public void handleResponse(MessageStatus response) {
-
-                                                        Log.i("info", "message sent");
+                                                        final ArrayList<Answer> answers = responseone.getAnswers();
 
 
+                                                        /*
 
-                                                        ArrayList<Answer> answers = responseone.getAnswers();
+                                                        Note - In order for the finish activity trigger message to send on the last iteration
+                                                        of the delete answers callbacks, I use a global wrapper counter variable which is initialised
+                                                        to 1 when the favourite answer is selected. When the counter matches the arraylist size, aka the
+                                                        final iteration of the loop it will then tell the guest activities to refresh followed by
+                                                        telling the initatior activity to refresh. This will prevent it refreshing while answers are not
+                                                        yet deleted.
 
+                                                        Note - The wrapper counter is assigned a value of 20 straight away inside the final iteration condidtional
+                                                        to prevent double positives and the app crashing.
+
+
+
+                                                        */
                                                         for (Answer ans : answers) {
 
                                                             Backendless.Persistence.of( Answer.class ).remove(ans,
@@ -537,10 +526,74 @@ public class InitiatorGamingActivity extends BaseActivity {
                                                                         public void handleResponse( Long response )
                                                                         {
 
+                                                                            Log.i("info", "answercounter = " + Wrapper.answercounterint);
+                                                                            Log.i("info", "answersize = " + answers.size());
+
+                                                                            if (Wrapper.answercounterint == answers.size()) {
+
+                                                                                Wrapper.answercounterint = 20;
 
 
-                                                                            finish();
-                                                                            startActivity(getIntent());
+                                                                                String winnerId = backendlessUsertwo.getProperty("deviceId").toString();
+
+                                                                                ArrayList<String> winner = new ArrayList<String>();
+
+                                                                                android.util.Pair<DeliveryOptions, PublishOptions> pair;
+
+                                                                                if (roundNumber.equalsIgnoreCase("4")) {
+
+                                                                                    winner.add(winnerId);
+                                                                                    pair = SendBroadcastMethods.PrepareBroadcast(winner, "finalwinnertrigger", "null", "null");
+
+                                                                                } else {
+
+
+                                                                                    pair = SendBroadcastMethods.PrepareBroadcast(players, "winnertrigger", "null", "null");
+
+                                                                                }
+
+
+                                                                                Log.i("info", "answercounterinsidetrue = " + Wrapper.answercounterint);
+
+                                                                                Backendless.Messaging.publish("", pair.second, pair.first, new AsyncCallback<MessageStatus>() {
+                                                                                    @Override
+                                                                                    public void handleResponse(MessageStatus response) {
+
+                                                                                        Log.i("info", "message sent");
+
+
+                                                                                        finish();
+                                                                                        startActivity(getIntent());
+
+
+
+                                                                                    }
+
+                                                                                    @Override
+                                                                                    public void handleFault(BackendlessFault backendlessFault) {
+
+
+                                                                                        Log.i("info", backendlessFault.toString());
+
+
+                                                                                    }
+                                                                                });
+
+
+
+
+
+
+
+
+                                                                            }
+
+
+                                                                            Wrapper.answercounterint ++;
+
+
+                                                                            //finish();
+                                                                            //startActivity(getIntent());
 
 
 
@@ -551,23 +604,9 @@ public class InitiatorGamingActivity extends BaseActivity {
                                                                         }
                                                                     } );
 
+
+
                                                         }
-
-
-
-
-
-                                                    }
-
-                                                    @Override
-                                                    public void handleFault(BackendlessFault backendlessFault) {
-
-
-                                                        Log.i("info", backendlessFault.toString());
-
-
-                                                    }
-                                                });
 
 
 
