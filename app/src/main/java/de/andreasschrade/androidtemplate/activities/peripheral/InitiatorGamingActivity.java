@@ -78,6 +78,8 @@ public class InitiatorGamingActivity extends BaseActivity {
     List<Answer> values;
     AnswerAdapter adapter;
 
+    String roundNumber;
+
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -115,7 +117,7 @@ public class InitiatorGamingActivity extends BaseActivity {
 
         listView.setAdapter(animationAdapter);
 
-        final String[] questions = {"\"What makes your pussy wet?\"", "\"How many inches can you deepthroat?\"", "\"Do you like it deep in your asshole?\""};
+        final String[] questions = {"\"Favourite movie?\"", "\"Favourite season?\"", "\"Favourite colour?\""};
 
         final TextView question = (TextView) findViewById(R.id.thequestion);
 
@@ -173,10 +175,12 @@ public class InitiatorGamingActivity extends BaseActivity {
 
                 //textView.setText(session.getRound());
 
-                setTitle("Round" + " " + session.getRound());
+                roundNumber = session.getRound();
+
+                setTitle("Round" + " " + roundNumber);
 
 
-                Log.i("info", "Round = " + session.getRound());
+                Log.i("info", "Round = " + roundNumber);
 
                 int counter = 0;
 
@@ -453,7 +457,30 @@ public class InitiatorGamingActivity extends BaseActivity {
                                     public void handleResponse(Session session) {
 
                                         //session.setRound_one_winner(backendlessUsertwo);
-                                        session.setRound("2");
+                                        ArrayList<BackendlessUser> winners = session.getRoundonewinner();
+
+                                        winners.add(backendlessUsertwo);
+
+                                        for (BackendlessUser winner : winners) {
+
+                                            Log.i("info", "winner relation test: " + winner.getUserId());
+                                        }
+
+
+
+                                        if (roundNumber.equalsIgnoreCase("1")) {
+
+                                            session.setRoundonewinner(winners);
+                                            session.setRound("2");
+                                            roundNumber = "2";
+
+                                        } else if (roundNumber.equalsIgnoreCase("2")) {
+
+                                            session.setRoundtwowinner(winners);
+                                            session.setRound("3");
+                                            roundNumber = "3";
+                                        }
+
                                         session.setQuestion(null);
 
 
@@ -469,9 +496,27 @@ public class InitiatorGamingActivity extends BaseActivity {
 
                                                 ArrayList<String> winner = new ArrayList<String>();
 
-                                                winner.add(winnerId);
+                                                android.util.Pair<DeliveryOptions, PublishOptions> pair;
 
-                                                android.util.Pair<DeliveryOptions, PublishOptions> pair = SendBroadcastMethods.PrepareBroadcast(winner, "winnertrigger", "null", "null");
+                                                if (roundNumber.equalsIgnoreCase("4")) {
+
+                                                    winner.add(winnerId);
+                                                    pair = SendBroadcastMethods.PrepareBroadcast(winner, "finalwinnertrigger", "null", "null");
+
+                                                } else {
+
+
+                                                    pair = SendBroadcastMethods.PrepareBroadcast(players, "winnertrigger", "null", "null");
+
+                                                }
+
+
+
+
+
+                                                //values.clear();
+                                                //adapter.notifyDataSetChanged();
+                                                //setTitle(roundNumber);
 
 
                                                 Backendless.Messaging.publish("", pair.second, pair.first, new AsyncCallback<MessageStatus>() {
@@ -479,6 +524,7 @@ public class InitiatorGamingActivity extends BaseActivity {
                                                     public void handleResponse(MessageStatus response) {
 
                                                         Log.i("info", "message sent");
+
 
 
                                                         ArrayList<Answer> answers = responseone.getAnswers();
@@ -491,6 +537,13 @@ public class InitiatorGamingActivity extends BaseActivity {
                                                                         public void handleResponse( Long response )
                                                                         {
 
+
+
+                                                                            finish();
+                                                                            startActivity(getIntent());
+
+
+
                                                                         }
                                                                         public void handleFault( BackendlessFault fault )
                                                                         {
@@ -499,6 +552,8 @@ public class InitiatorGamingActivity extends BaseActivity {
                                                                     } );
 
                                                         }
+
+
 
 
 

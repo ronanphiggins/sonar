@@ -18,9 +18,9 @@ public class Session {
 
     private ArrayList<Answer> answers;
 
-    private BackendlessUser round_one_winner;
+    private ArrayList<BackendlessUser> roundonewinner;
 
-    private BackendlessUser round_two_winner;
+    private ArrayList<BackendlessUser> roundtwowinner;
 
 
     public Session()
@@ -68,23 +68,13 @@ public class Session {
 
     public void setQuestion(String question) {this.question = question; }
 
-    public void setRound_one_winner(BackendlessUser round_one_winner) {this.round_one_winner = round_one_winner; }
+    public ArrayList<BackendlessUser> getRoundonewinner() { return roundonewinner; }
 
-    public void setRound_two_winner(BackendlessUser round_two_winner) {this.round_two_winner = round_two_winner; }
+    public void setRoundonewinner(ArrayList<BackendlessUser> roundonewinner) {this.roundonewinner = roundonewinner; }
 
+    public ArrayList<BackendlessUser> getRoundtwowinner() { return roundtwowinner; }
 
-
-
-
-
-
-
-//public void setAnswers(Answer[] answers) { this.answers = answers; }
-
-    //public String getRound_one_question() { return round_one_question; }
-
-    //public void setRound_one_question(String round_one_question) {this.round_one_question = round_one_question; }
-
+    public void setRoundtwowinner(ArrayList<BackendlessUser> roundtwowinner) {this.roundtwowinner = roundtwowinner; }
 
 }
 

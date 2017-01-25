@@ -240,6 +240,25 @@ public class PushReceiver extends BackendlessBroadcastReceiver {
 
                 try {
 
+                    //GuestGamingActivity.getInstance().DeclareWinner();
+
+                    GuestGamingActivity.getInstance().refreshActivity();
+
+                    Log.i("info", "try");
+
+                } catch (Exception e) {
+
+
+                    Log.i("info", "catch" + e);
+
+
+                }
+
+            } else if (trigger.equalsIgnoreCase("finalwinnertrigger")) {
+
+
+                try {
+
                     GuestGamingActivity.getInstance().DeclareWinner();
 
                     Log.i("info", "try");

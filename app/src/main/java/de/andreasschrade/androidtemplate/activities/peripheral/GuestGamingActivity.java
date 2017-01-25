@@ -292,7 +292,7 @@ public class GuestGamingActivity extends BaseActivity {
                             final String answerId = answer.getObjectId();
 
 
-                                    Backendless.Persistence.of(Session.class).findById("6E66FA4F-C624-FDD7-FFC6-714FCD3EE100", new AsyncCallback<Session>() {
+                                Backendless.Persistence.of(Session.class).findById("6E66FA4F-C624-FDD7-FFC6-714FCD3EE100", new AsyncCallback<Session>() {
                                 @Override
                                 public void handleResponse(Session session) {
 
@@ -565,6 +565,14 @@ public class GuestGamingActivity extends BaseActivity {
 
         Toast.makeText(GuestGamingActivity.this, "Congrats you have Won the date!!!!",
                 Toast.LENGTH_LONG).show();
+
+    }
+
+
+    public void refreshActivity() {
+
+        finish();
+        startActivity(getIntent());
 
     }
 
