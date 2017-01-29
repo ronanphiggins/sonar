@@ -1,5 +1,6 @@
 package de.andreasschrade.androidtemplate.activities.peripheral;
 
+import android.app.Dialog;
 import android.graphics.Bitmap;
 import android.media.MediaPlayer;
 import android.os.Build;
@@ -57,6 +58,8 @@ import de.andreasschrade.androidtemplate.backendless.Tender;
 import de.andreasschrade.androidtemplate.backendless.Users;
 import de.andreasschrade.androidtemplate.utilities.AnswerAdapter;
 import de.andreasschrade.androidtemplate.utilities.AnswerTag;
+import de.andreasschrade.androidtemplate.utilities.CountDownAnimation;
+import de.andreasschrade.androidtemplate.utilities.CountdownUtility;
 import de.andreasschrade.androidtemplate.utilities.StringUtil;
 
 /**
@@ -64,7 +67,7 @@ import de.andreasschrade.androidtemplate.utilities.StringUtil;
  *
  * Created by Andreas Schrade on 14.12.2015.
  */
-public class GuestGamingActivity extends BaseActivity {
+public class GuestGamingActivity extends BaseActivity implements CountDownAnimation.CountDownListener {
     /**
      * Whether or not the activity is running on a device with a large screen
      */
@@ -77,6 +80,10 @@ public class GuestGamingActivity extends BaseActivity {
     EditText answeredittext;
 
     final ArrayList<String> players = new ArrayList<>();
+
+    private Dialog dialog;
+
+    private CountDownAnimation.CountDownListener countDlist;
 
 
 
@@ -96,6 +103,9 @@ public class GuestGamingActivity extends BaseActivity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+        countDlist = this;
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
 
@@ -571,8 +581,7 @@ public class GuestGamingActivity extends BaseActivity {
 
     public void refreshActivity() {
 
-        finish();
-        startActivity(getIntent());
+        dialog = CountdownUtility.CountdownHandler(GuestGamingActivity.this, countDlist);
 
     }
 
@@ -610,5 +619,19 @@ public class GuestGamingActivity extends BaseActivity {
     @Override
     public boolean providesActivityToolbar() {
         return true;
+    }
+
+
+    @Override
+    public void onCountDownEnd(CountDownAnimation animation) {
+
+
+
+        dialog.dismiss();
+        finish();
+        startActivity(getIntent());
+
+
+
     }
 }

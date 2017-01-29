@@ -22,6 +22,8 @@ public class Session {
 
     private ArrayList<BackendlessUser> roundtwowinner;
 
+    private ArrayList<BackendlessUser> roundthreewinner;
+
 
     public Session()
     {
@@ -76,5 +78,8 @@ public class Session {
 
     public void setRoundtwowinner(ArrayList<BackendlessUser> roundtwowinner) {this.roundtwowinner = roundtwowinner; }
 
+    public ArrayList<BackendlessUser> getRoundthreewinner() { return roundthreewinner; }
+
+    public void setRoundthreewinner(ArrayList<BackendlessUser> roundthreewinner) {this.roundthreewinner = roundthreewinner; }
 }
 

@@ -1,5 +1,6 @@
 package de.andreasschrade.androidtemplate.activities.peripheral;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -38,7 +39,9 @@ import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.nhaarman.listviewanimations.appearance.simple.SwingRightInAnimationAdapter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import de.andreasschrade.androidtemplate.R;
@@ -49,6 +52,8 @@ import de.andreasschrade.androidtemplate.backendless.SendBroadcastMethods;
 import de.andreasschrade.androidtemplate.backendless.Session;
 import de.andreasschrade.androidtemplate.utilities.AnswerAdapter;
 import de.andreasschrade.androidtemplate.utilities.AnswerTag;
+import de.andreasschrade.androidtemplate.utilities.CountDownAnimation;
+import de.andreasschrade.androidtemplate.utilities.CountdownUtility;
 import de.andreasschrade.androidtemplate.utilities.LogUtil;
 import de.andreasschrade.androidtemplate.utilities.SaveSharedPreference;
 import de.andreasschrade.androidtemplate.utilities.StringUtil;
@@ -60,7 +65,7 @@ import de.andreasschrade.androidtemplate.wrapper.BidderContent;
  *
  * Created by Andreas Schrade on 14.12.2015.
  */
-public class InitiatorGamingActivity extends BaseActivity {
+public class InitiatorGamingActivity extends BaseActivity implements CountDownAnimation.CountDownListener {
 
 
     private boolean twoPaneMode;
@@ -68,6 +73,9 @@ public class InitiatorGamingActivity extends BaseActivity {
     private static InitiatorGamingActivity instwo;
 
     final ArrayList<String> players = new ArrayList<>();
+
+
+    private Dialog dialog;
 
 
     private boolean generateQuestion = false;
@@ -81,6 +89,12 @@ public class InitiatorGamingActivity extends BaseActivity {
 
     String roundNumber;
 
+    private boolean outrightwinner = false;
+
+    private  boolean suddendeath = false;
+
+    private CountDownAnimation.CountDownListener countDlist;
+
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -91,6 +105,9 @@ public class InitiatorGamingActivity extends BaseActivity {
         setTitle("");
 
         instwo = this;
+
+
+        countDlist = this;
 
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
@@ -483,6 +500,81 @@ public class InitiatorGamingActivity extends BaseActivity {
                                             roundNumber = "3";
 
 
+                                        } else if (roundNumber.equalsIgnoreCase("3")) {
+
+
+                                            ArrayList<BackendlessUser> winnersroundthree = session.getRoundthreewinner();
+
+                                            winnersroundthree.add(backendlessUsertwo);
+
+                                            session.setRoundthreewinner(winnersroundthree);
+
+                                            ArrayList<String> potentialwinners = new ArrayList<>();
+
+
+                                            //add round one winner into potential winners array
+                                            ArrayList<BackendlessUser> roundonewinner = session.getRoundonewinner();
+                                            for (BackendlessUser row : roundonewinner) {potentialwinners.add(row.getUserId());}
+
+                                            //add round two winner into potential winners array
+                                            ArrayList<BackendlessUser> roundtwowinner = session.getRoundtwowinner();
+                                            for (BackendlessUser rtw : roundtwowinner) {potentialwinners.add(rtw.getUserId());}
+
+                                            //add round three winner into potential winners array
+                                            potentialwinners.add(backendlessUsertwo.getObjectId());
+
+
+                                            //find most freuqent user / users in the potentia winner array
+                                            Map<String, Integer> map = new HashMap<String, Integer>();
+
+                                            Map<String, Integer> winning = new HashMap<String, Integer>();
+
+                                            for(int i = 0; i < potentialwinners.size(); i++){
+                                                if(map.get(potentialwinners.get(i)) == null){
+                                                    map.put(potentialwinners.get(i),1);
+                                                }else{
+                                                    map.put(potentialwinners.get(i), map.get(potentialwinners.get(i)) + 1);
+                                                }
+                                            }
+                                            int largest = 0;
+                                            for (Map.Entry<String, Integer> entry : map.entrySet()) {
+                                                String key = entry.getKey();
+                                                int value = entry.getValue();
+                                                if( value > largest){
+                                                    largest = value;
+                                                    winning.clear();
+                                                    winning.put(key, value);
+
+                                                } else if (value == largest) {
+
+                                                    winning.put(key, value);
+
+                                                }
+                                            }
+
+                                            ///Determine if outright winner or sudden death
+
+
+                                            if (winning.size() == 1) {
+
+                                                outrightwinner = true;
+
+                                            } else if (winning.size() > 1) {
+
+
+                                                Log.i("info", "sudden death");
+                                                roundNumber = "3";
+                                                session.setRound("Sudden Death");
+
+                                            }
+
+
+
+
+
+
+
+
                                         }
 
                                         session.setQuestion(null);
@@ -540,7 +632,7 @@ public class InitiatorGamingActivity extends BaseActivity {
 
                                                                                 android.util.Pair<DeliveryOptions, PublishOptions> pair;
 
-                                                                                if (roundNumber.equalsIgnoreCase("4")) {
+                                                                                if (outrightwinner) {
 
                                                                                     winner.add(winnerId);
                                                                                     pair = SendBroadcastMethods.PrepareBroadcast(winner, "finalwinnertrigger", "null", "null");
@@ -562,8 +654,9 @@ public class InitiatorGamingActivity extends BaseActivity {
                                                                                         Log.i("info", "message sent");
 
 
-                                                                                        finish();
-                                                                                        startActivity(getIntent());
+
+
+                                                                                        dialog = CountdownUtility.CountdownHandler(InitiatorGamingActivity.this, countDlist);
 
 
 
@@ -824,6 +917,20 @@ public class InitiatorGamingActivity extends BaseActivity {
     @Override
     public boolean providesActivityToolbar() {
         return true;
+    }
+
+
+    @Override
+    public void onCountDownEnd(CountDownAnimation animation) {
+
+
+
+        dialog.dismiss();
+        finish();
+        startActivity(getIntent());
+
+
+
     }
 
 
