@@ -135,7 +135,7 @@ public class InitiatorGamingActivity extends BaseActivity implements CountDownAn
 
         listView.setAdapter(animationAdapter);
 
-        final String[] questions = {"\"Favourite movie?\"", "\"Favourite season?\"", "\"Favourite colour?\""};
+        final String[] questions = getResources().getStringArray(R.array.girl_questions);
 
         final TextView question = (TextView) findViewById(R.id.thequestion);
 
